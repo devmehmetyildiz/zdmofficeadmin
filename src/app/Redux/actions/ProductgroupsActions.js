@@ -59,7 +59,7 @@ export const GetSelectedProductgroups = (ItemId) => async dispatch => {
         })
 };
 
-export const CreateProductgroups  = (Item, historypusher) => dispatch => {
+export const CreateProductgroups = (Item, historypusher) => dispatch => {
     dispatch({ type: ACTION_TYPES.CREATE_PRODUCTGROUP_INIT })
     axios({
         method: `post`,
@@ -70,7 +70,7 @@ export const CreateProductgroups  = (Item, historypusher) => dispatch => {
         .then(() => {
             dispatch({ type: ACTION_TYPES.CREATE_PRODUCTGROUP_SUCCESS })
             Popup("Success", "Ürün Grupları", "Ürün Grupları Oluşturuldu")
-            historypusher.push("/Categories")
+            historypusher.push("/Productgroups")
         })
         .catch(error => {
             dispatch({ type: ACTION_TYPES.CREATE_PRODUCTGROUP_ERROR, payload: error })
@@ -78,7 +78,7 @@ export const CreateProductgroups  = (Item, historypusher) => dispatch => {
         })
 }
 
-export const UpdateProductgroups  = (Item, historypusher) => dispatch => {
+export const UpdateProductgroups = (Item, historypusher) => dispatch => {
     dispatch({ type: ACTION_TYPES.EDIT_PRODUCTGROUP_INIT })
     axios({
         method: `put`,
@@ -90,7 +90,7 @@ export const UpdateProductgroups  = (Item, historypusher) => dispatch => {
             dispatch({ type: ACTION_TYPES.EDIT_PRODUCTGROUP_SUCCESS })
             dispatch({ type: ACTION_TYPES.REMOVE_SELECTEDPRODUCTGROUP })
             Popup("Success", "Ürün Grupları", "Ürün Grupları Güncellendi")
-            historypusher.push("/Categories")
+            historypusher.push("/Productgroups")
         })
         .catch(error => {
             dispatch({ type: ACTION_TYPES.EDIT_PRODUCTGROUP_ERROR, payload: error })
@@ -98,7 +98,7 @@ export const UpdateProductgroups  = (Item, historypusher) => dispatch => {
         })
 }
 
-export const DeleteProductgroups  = (Item) => dispatch => {
+export const DeleteProductgroups = (Item) => dispatch => {
     dispatch({ type: ACTION_TYPES.DELETE_PRODUCTGROUP_INIT })
     axios({
         method: `delete`,
@@ -108,6 +108,19 @@ export const DeleteProductgroups  = (Item) => dispatch => {
     })
         .then(() => {
             dispatch({ type: ACTION_TYPES.DELETE_PRODUCTGROUP_SUCCESS })
+            dispatch({ type: ACTION_TYPES.GET_ALLPRODUCTGROUPS_INIT })
+            axios({
+                method: `get`,
+                url: process.env.REACT_APP_BACKEND_URL + `/${ROUTES.PRODUCTGROUPS}/GetAll`,
+                headers: { Authorization: `Bearer ${GetToken()}` }
+            })
+                .then(response => {
+                    dispatch({ type: ACTION_TYPES.GET_ALLPRODUCTGROUPS_SUCCESS, payload: response.data })
+                })
+                .catch(error => {
+                    dispatch({ type: ACTION_TYPES.GET_ALLPRODUCTGROUPS_ERROR, payload: error })
+                    AxiosErrorHandle(error, ROUTES.PRODUCTGROUPS, "GetAll")
+                })
             Popup("Success", "Ürün Grupları", "Ürün Grupları Silindi")
         })
         .catch(error => {
@@ -116,7 +129,7 @@ export const DeleteProductgroups  = (Item) => dispatch => {
         })
 }
 
-export const ClearSelectedProductgroups  = () => dispatch => {
+export const ClearSelectedProductgroups = () => dispatch => {
     dispatch({ type: ACTION_TYPES.REMOVE_SELECTEDPRODUCTGROUP })
 }
 

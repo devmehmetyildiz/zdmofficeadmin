@@ -1,16 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { OverlayTrigger, Tooltip, Button, ButtonToolbar, Popover, Image } from 'react-bootstrap';
 import { COLUMNTYPES, ROUTES } from '../../Utils/Constants';
-import { GetAllFiles, GetSelectedFile, OpenDeleteModal, CloseDeleteModal } from '../../Redux/actions/FileActions'
+import { GetAllProducs, GetSelectedProduct, OpenDeleteModal, CloseDeleteModal } from '../../Redux/actions/ProductsActions'
 import { withRouter } from 'react-router-dom';
 import Spinner from "../../shared/Spinner"
 import DeleteModal from "./Delete"
 import "../../../assets/styles/Pages/File.scss"
 import Datatable from '../../Utils/Datatable';
-import axios from 'axios';
-import { GetToken } from '../../Utils/TokenValidChecker';
-export class Files extends Component {
+
+export class Products extends Component {
 
   constructor(props) {
     super(props)
@@ -30,46 +28,9 @@ export class Files extends Component {
         text: 'İsim',
         Columntype: COLUMNTYPES.TEXT,
         Formatheader: true,
-        formatter: (cellContent, row) => {
-          return <div className='containerclassheader'>
-            <div className='d-inline'>
-              <img src={`${process.env.REACT_APP_BACKEND_URL}/${ROUTES.FILE}/GetImage?Guid=${row.concurrencyStamp}`} />
-            </div>
-            <div className='ml-2 d-inline text-nowrap'>
-              {cellContent}
-            </div>
-          </div>
-        }
-      },
-      {
-        dataField: 'filename',
-        text: 'Dosya Adı',
-        Columntype: COLUMNTYPES.TEXT,
-        Formatheader: true,
       }, {
-        dataField: 'filefolder',
-        text: 'Bulut Klasör',
-        Columntype: COLUMNTYPES.TEXT,
-        Formatheader: true,
-      }, {
-        dataField: 'filepath',
-        text: 'Klasör Dizini',
-        Columntype: COLUMNTYPES.TEXT,
-        Formatheader: true,
-      }, {
-        dataField: 'downloadedcount',
-        text: 'İndirilme Sayısı',
-        Columntype: COLUMNTYPES.NUMBER,
-        Formatheader: true,
-      }, {
-        dataField: 'lastdownloadeduser',
-        text: 'En Son İndiren Kullanıcı',
-        Columntype: COLUMNTYPES.TEXT,
-        Formatheader: true,
-      },
-      {
-        dataField: 'lastdownloadedip',
-        text: 'En Son İndiren IP',
+        dataField: 'uuid',
+        text: 'Benzersiz ID',
         Columntype: COLUMNTYPES.TEXT,
         Formatheader: true,
       }, {
@@ -87,7 +48,7 @@ export class Files extends Component {
         },
         events: {
           onClick: (e, column, columnIndex, row, rowIndex) => {
-            this.props.history.push('/Files/' + row.concurrencyStamp)
+            this.props.history.push('/Products/' + row.uuid)
           }
         }
       }
@@ -112,48 +73,28 @@ export class Files extends Component {
       }
 
     ];
-
     this.state = { currentitem, columns, isLoading };
   }
 
-
-
-
   handleDeleteRole = async (e, row) => {
-    await this.props.GetSelectedFile(row.concurrencyStamp)
+    await this.props.GetSelectedProduct(row.uuid)
     this.props.OpenDeleteModal()
   }
 
-  getimg = async (concurrencyStamp) => {
-    let data = ""
-    await axios
-      .get(process.env.REACT_APP_BACKEND_URL + `/${ROUTES.FILE}/GetImage?Guid=${concurrencyStamp}`, {
-        headers: { Authorization: `Bearer ${GetToken()}` },
-        responseType: "arraybuffer",
-      })
-      .then((response) => {
-        data = `data:${response.headers["content-type"]
-          };base64,${new Buffer(response.data, "binary").toString("base64")}`
-        console.log('data: ', data);
-
-      })
-    return data
-  }
-
   handleonaddnew = (e) => {
-    this.props.history.push("/Files/Create")
+    this.props.history.push("/Products/Create")
   }
 
   componentDidMount() {
-    this.props.GetAllFiles();
+    this.props.GetAllProducs();
   }
 
   render() {
-    const { isLoading, list } = this.props.Files;
+    const { isLoading, list } = this.props.Products;
     return (
       <div>
         <DeleteModal
-          show={this.props.Files.isModalOpen}
+          show={this.props.Products.isModalOpen}
           onHide={() => {
             this.props.CloseDeleteModal()
           }}
@@ -165,10 +106,10 @@ export class Files extends Component {
                 <div className="card-body">
                   <div className='row'>
                     <div className='col-6 d-flex justify-content-start'>
-                      <h4 className="card-title">Dosyalar</h4>
+                      <h4 className="card-title">Ürünler</h4>
                     </div>
                     <div className='col-6 d-flex justify-content-end'>
-                      <button style={{ minWidth: '120px', height: '30px' }} onClick={this.handleonaddnew} className="btn btn-primary mr-2">Yeni Dosya Ekle</button>
+                      <button style={{ minWidth: '120px', height: '30px' }} onClick={this.handleonaddnew} className="btn btn-primary mr-2">Yeni Ürün Ekle</button>
                     </div>
                   </div>
                   <Datatable columns={this.state.columns} data={list} />
@@ -183,9 +124,9 @@ export class Files extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  Files: state.Files
+  Products: state.Products
 })
 
-const mapDispatchToProps = { GetAllFiles, GetSelectedFile, OpenDeleteModal, CloseDeleteModal }
+const mapDispatchToProps = { GetAllProducs, GetSelectedProduct, OpenDeleteModal, CloseDeleteModal }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Files))
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Products))

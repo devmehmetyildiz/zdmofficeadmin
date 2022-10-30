@@ -128,8 +128,8 @@ class Sidebar extends Component {
                 <ul className="nav flex-column sub-menu">
                   <li className="nav-item"> <Link className={ this.isPathActive('/Categories') ? 'nav-link active' : 'nav-link' } to="/Categories">Kategoriler</Link></li>
                   <li className="nav-item"> <Link className={ this.isPathActive('/Subcategories') ? 'nav-link active' : 'nav-link' } to="/Subcategories">Alt Kategoriler</Link></li>
-                  <li className="nav-item"> <Link className={ this.isPathActive('/Productgroups') ? 'nav-link active' : 'nav-link' } to="/Productgroups">Kategoriler</Link></li>
-                  <li className="nav-item"> <Link className={ this.isPathActive('/Products') ? 'nav-link active' : 'nav-link' } to="/Products">Kategoriler</Link></li>
+                  <li className="nav-item"> <Link className={ this.isPathActive('/Productgroups') ? 'nav-link active' : 'nav-link' } to="/Productgroups">Ürün Grupları</Link></li>
+                  <li className="nav-item"> <Link className={ this.isPathActive('/Products') ? 'nav-link active' : 'nav-link' } to="/Products">Ürünleri</Link></li>
                   <li className="nav-item"> <Link className={ this.isPathActive('/Files') ? 'nav-link active' : 'nav-link' } to="/Files">Dosyalar</Link></li>
                 </ul>
               </div>

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { COLUMNTYPES, ROUTES } from '../../Utils/Constants';
 import { GetAllSubcategories, GetSelectedSubcategory, OpenDeleteModal, CloseDeleteModal } from '../../Redux/actions/SubcategoriesActions'
+import { GetAllCategories } from "../../Redux/actions/CategoriesActions"
 import { withRouter } from 'react-router-dom';
 import Spinner from "../../shared/Spinner"
 import DeleteModal from "./Delete"
@@ -29,7 +30,7 @@ export class Subcategories extends Component {
         Columntype: COLUMNTYPES.TEXT,
         Formatheader: true,
       }, {
-        dataField: 'categoryuui',
+        dataField: 'category.name',
         text: 'Üst Kategori',
         Columntype: COLUMNTYPES.TEXT,
         Formatheader: true,
@@ -91,7 +92,7 @@ export class Subcategories extends Component {
     this.props.OpenDeleteModal()
   }
 
-  
+
 
   handleonaddnew = (e) => {
     this.props.history.push("/Subcategories/Create")
@@ -99,10 +100,23 @@ export class Subcategories extends Component {
 
   componentDidMount() {
     this.props.GetAllSubcategories();
+    this.props.GetAllCategories();
+  }
+
+  componentDidUpdate() {
+    if (
+      !this.props.Subcategories.isLoading &&
+      !this.props.Categories.isLoading &&
+      this.props.Categories.list.length > 0 &&
+      !this.state.Isdatafetched
+    ) {
+
+    }
   }
 
   render() {
     const { isLoading, list } = this.props.Subcategories;
+    console.log('this.props.Subcategories: ', this.props.Subcategories);
     return (
       <div>
         <DeleteModal
@@ -136,9 +150,10 @@ export class Subcategories extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  Subcategories: state.Subcategories
+  Subcategories: state.Subcategories,
+  Categories: state.Categories
 })
 
-const mapDispatchToProps = { GetAllSubcategories, GetSelectedSubcategory, OpenDeleteModal, CloseDeleteModal }
+const mapDispatchToProps = { GetAllSubcategories, GetSelectedSubcategory, OpenDeleteModal, CloseDeleteModal, GetAllCategories }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Subcategories))

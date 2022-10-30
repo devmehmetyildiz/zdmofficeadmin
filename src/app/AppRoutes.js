@@ -50,9 +50,9 @@ class AppRoutes extends Component {
           <ProtectedRoute exact path="/Files/Create" component={ FilesCreate } />
           <ProtectedRoute exact path="/Files/:Id" component={ FilesEdit } />
 
-          <ProtectedRoute exact path="/Productsgroups" component={ Productgroups } />
-          <ProtectedRoute exact path="/Productsgroups/Create" component={ ProductgroupsCreate } />
-          <ProtectedRoute exact path="/Productsgroups/:Id" component={ ProductgroupsEdit } />
+          <ProtectedRoute exact path="/Productgroups" component={ Productgroups } />
+          <ProtectedRoute exact path="/Productgroups/Create" component={ ProductgroupsCreate } />
+          <ProtectedRoute exact path="/Productgroups/:Id" component={ ProductgroupsEdit } />
 
           <Route exact path="/Login" component={ Login } />       
           <Route exact path="/User/Register" component={ Register } />

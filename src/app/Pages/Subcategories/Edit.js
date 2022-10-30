@@ -3,203 +3,141 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom';
 import InputItem from '../../Components/Common/Forminput'
 import "../../../assets/styles/Pages/Create.scss"
-import { UpdateFile, GetSelectedFile } from "../../Redux/actions/FileActions"
+import { UpdateSubcategory, GetSelectedSubcategory, ClearSelectedSubcategory } from "../../Redux/actions/SubcategoriesActions"
+import { GetAllCategories } from "../../Redux/actions/CategoriesActions"
 import Spinner from '../../shared/Spinner'
 import Select from 'react-select';
-import { GetToken } from '../../Utils/TokenValidChecker';
-import { ROUTES } from '../../Utils/Constants';
-import axios from 'axios';
-
 export class Edit extends Component {
+
   constructor(props) {
     super(props)
-    const defaultImageSrc = '/img/user.png'
-
-    const initialfieldvalues = {
+    const currentitem = {
       id: 0,
       name: "",
-      filename: '',
-      filefolder: ' ',
-      filetype: ' ',
-      downloadedcount: 0,
-      lastdownloadeduser: ' ',
-      lastdownloadedip: ' ',
-      filepath: defaultImageSrc,
-      file: null,
-      concurrencyStamp: '',
-      createdUser: '',
-      updatedUser: '',
-      deleteUser: '',
-      createTime: null,
-      updateTime: null,
-      deleteTime: null,
-      isActive: false
+      categoryuui: "",
+      uuid: null,
+      createduser: "",
+      updateduser: null,
+      deleteuser: null,
+      createdtime: null,
+      updatetime: null,
+      deletetime: null,
+      isActive: true,
+      category: {}
     }
-    const values = initialfieldvalues
-    const errors = {}
-    const isDataFetched = false
-    const fileimg = {}
-    this.state = { values, defaultImageSrc, errors, fileimg }
+    const selectedcategory = {}
+    const categories = []
+    this.state = { currentitem, selectedcategory, categories };
   }
-  handleInputChange = (e) => {
-    const { name, value } = e.target
-    const newdata = { ...this.state.values }
-    newdata[name] = value
-    this.setState({ values: newdata })
+
+  componentWillUnmount() {
+    this.props.ClearSelectedSubcategory()
   }
-  showPreview = e => {
-    if (e.target.files && e.target.files[0]) {
-      let file = e.target.files[0]
-      const reader = new FileReader()
-      reader.onload = x => {
-        const newdata = { ...this.state.values }
-        newdata.file = file
-        newdata.filepath = x.target.result
-        this.setState({ values: newdata })
-      }
-      reader.readAsDataURL(file)
-    } else {
-      const newdata = { ...this.state.values }
-      newdata.file = null
-      newdata.filepath = this.state.defaultImageSrc
-      this.setState({ values: newdata })
-    }
-  }
-  validate = () => {
-    let temp = {}
-    temp.name = this.state.values.name == "" ? false : true
-    temp.filepath = this.state.values.filepath == this.state.defaultImageSrc ? false : true
-    this.setState({ errors: temp })
-    return Object.values(temp).every(x => x == true)
-  }
-  resetForm = () => {
-    this.setState({ values: this.state.initialfieldvalues })
-  }
-  handleSubmit = e => {
+
+  handlesubmit = (e) => {
     e.preventDefault()
-    if (this.validate()) {
-      const formData = new FormData();
-      formData.append('id', this.state.values.id);
-      formData.append('name', this.state.values.name);
-      formData.append('filefolder', this.state.values.filefolder);
-      formData.append('filetype', this.state.values.filetype);
-      formData.append('downloadedcount', this.state.values.downloadedcount);
-      formData.append('lastdownloadeduser', this.state.values.lastdownloadeduser);
-      formData.append('lastdownloadedip', this.state.values.lastdownloadedip);
-      formData.append('file', this.state.values.file);
-      formData.append('concurrencyStamp', this.state.values.concurrencyStamp);
-      formData.append('createdUser', this.state.values.createdUser);
-      formData.append('updatedUser', this.state.values.updatedUser);
-      formData.append('deleteUser', this.state.values.deleteUser);
-      formData.append('isActive', this.state.values.isActive);
-      this.props.UpdateFile(formData, this.props.history)
-    }
+    const newdata = { ...this.state.currentitem }
+    newdata.categoryuui = this.state.selectedcategory.value
+    this.setState({ currentitem: newdata }, () => {
+      this.props.UpdateSubcategory(this.state.currentitem, this.props.history)
+    })
   }
 
   componentDidMount() {
-    this.props.GetSelectedFile(this.props.match.params.FileId);
+    this.props.GetSelectedSubcategory(this.props.match.params.Id);
+    this.props.GetAllCategories();
+  }
+  componentDidUpdate() {
+    if (this.props.Categories.list.length > 0 &&
+      this.state.categories.length === 0 &&
+      !this.props.Categories.isLoading &&
+      !this.props.Subcategories.isLoading &&
+      this.props.Subcategories.selected_record.id !== 0 &&
+      this.state.currentitem.id === 0) {
 
+      const prevData = {
+        value: this.props.Subcategories.selected_record.category.uuid,
+        label: this.props.Subcategories.selected_record.category.name
+      }
+
+      const list = this.props.Categories.list.map((item, index) => {
+        return { value: item.uuid, label: item.name }
+      })
+
+      this.setState({ categories: list, selectedcategory: prevData, currentitem: this.props.Subcategories.selected_record })
+    }
   }
 
   goBack = (e) => {
     e.preventDefault()
-    this.props.history.push("/Files")
-}
-
-  componentDidUpdate() {
-    if (
-      this.props.Files.selected_file.id !== 0 &&
-      !this.props.Files.isLoading &&
-      !this.state.dataFetched
-    ) {
-      this.setState({ values: this.props.Files.selected_file, dataFetched: true }, () => {
-        axios
-          .get(process.env.REACT_APP_BACKEND_URL + `/${ROUTES.FILE}/GetFile?ID=${this.state.values.concurrencyStamp}`, {
-            headers: { Authorization: `Bearer ${GetToken()}` },
-            responseType: "arraybuffer",
-          })
-          .then((response) => {
-            let data = `data:${response.headers["content-type"]
-              };base64,${new Buffer(response.data, "binary").toString("base64")}`;
-            const newdata = this.state.values
-            newdata.filepath = data
-            this.setState({ values: newdata })
-          })
-      })
-    }
+    this.props.history.push("/Subcategories")
   }
 
-  applyerrorclass = field => ((field in this.state.errors && this.state.errors[field] == false) ? ' invalid-field' : '')
+  handleonchange = (e) => {
+    const newdata = { ...this.state.currentitem }
+    newdata[e.target.id] = e.target.value
+    this.setState({ currentitem: newdata })
+  }
+
+  handleselect = (e) => {
+    this.setState({ selectedcategory: e })
+  }
 
   render() {
-    const isLoading = this.props.Files.isLoading
+    const list = this.state.categories
+    const isLoading = (this.props.Categories.isLoading || this.props.Subcategories.isLoading)
     return (
       <>
         {isLoading ? <Spinner /> :
-          <>
-            <div className='Page'>
-              <div className="col-12 grid-margin">
-                <div className="card">
-                  <div className="card-body">
-                    <h4 className="card-title">Dosya Yükleme Erkanı</h4>
-                    <form onSubmit={this.handleSubmit} autoComplete='off' noValidate>
-                      <div className='row'>
-                        <div className='col'>
-                          <img style={{ objectFit: 'contain', margin: '10px', width: '200px', height: '200px' }} src={this.state.values.filepath} className="card-img-top" />
-                          <div className='form-group'>
-                            <input className={"form-control-file" + this.applyerrorclass('filepath')}  type="file"
-                              onChange={this.showPreview}
-                            />
-                          </div>
-                          <div className='form-group'>
-                            <label>Dosya Adı</label>
-                            <input className={"form-control" + this.applyerrorclass('name')} placeholder=' Name' name='name'
-                              value={this.state.values.name}
-                              onChange={this.handleInputChange}
-                            />
-                          </div>
-                          <div className='row d-flex pr-5 justify-content-end align-items-right'>
-                            <button onClick={this.goBack} style={{ minWidth: '150px' }} className="btn btn-dark mr-2">Geri Dön</button>
-                            <button type="submit" style={{ minWidth: '150px' }} className="btn btn-primary mr-2">Ekle</button>
-                          </div>
-                        </div>
-                        <div className='col mr-5'>
-                          <div className='card' style={{ backgroundColor: '#3e3e3f' }}>
-                            <div className='card-body'>
-                              <div className='row'>
-                                <label>Dosya Adı : {this.state.values.name}</label>
-                              </div>
-                              <div className='row'>
-                                <label>İndirilme Sayısı : {this.state.values.downloadedcount}</label>
-                              </div>
-                              <div className='row'>
-                                <label>En Son İndiren Kullanıcı: {this.state.values.lastdownloadeduser}</label>
-                              </div>
-                              <div className='row'>
-                                <label>En Son İndiren ip Adresi: {this.state.values.lastdownloadedip}</label>
-                              </div>
-                              <div className='row'>
-                                <label>En Son İndiren ip Adresi: {this.state.values.lastdownloadedip}</label>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+          <div className='Page'>
+            <div className="col-12 grid-margin">
+              <div className="card">
+                <div className="card-body">
+                  <h4 className="card-title">Alt Kategoriler > Güncelle</h4>
+                  <form className="form-sample" onSubmit={this.handlesubmit}>
+                    <div className="row">
+                      <InputItem
+                        itemrowspan="2"
+                        itemname="isim"
+                        itemid="name"
+                        itemvalue={this.state.currentitem.name}
+                        itemtype="text"
+                        itemplaceholder="İsim"
+                        itemchange={this.handleonchange}
+                      />
+                    </div>
+                    <div className='row'>
+                      <label style={{ fontSize: "12px" }} className="col-form-label">Kategori</label>
+                    </div>
+                    <div className='row'>
+                      <div style={{ marginRight: '-5px' }} className='col-12 pr-5 mb-3'>
+                        <Select
+                          value={this.state.selectedcategory}
+                          onChange={this.handleselect}
+                          options={list}
+                        />
                       </div>
-                    </form>
-                  </div>
+                    </div>
+                    <div className='row d-flex pr-5 justify-content-end align-items-right'>
+                      <button onClick={this.goBack} style={{ minWidth: '150px' }} className="btn btn-dark mr-2">Geri Dön</button>
+                      <button type="submit" style={{ minWidth: '150px' }} className="btn btn-primary mr-2">Güncelle</button>
+                    </div>
+                  </form>
                 </div>
               </div>
             </div>
-          </>
+          </div>
         }
       </>
     )
   }
 }
+
 const mapStateToProps = (state) => ({
-  Files: state.Files,
+  Categories: state.Categories,
+  Subcategories: state.Subcategories
 })
 
-const mapDispatchToProps = { UpdateFile, GetSelectedFile }
+const mapDispatchToProps = { UpdateSubcategory, GetSelectedSubcategory, ClearSelectedSubcategory, GetAllCategories }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Edit))

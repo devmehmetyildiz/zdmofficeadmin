@@ -59,7 +59,7 @@ export const GetSelectedSubcategory = (ItemId) => async dispatch => {
         })
 };
 
-export const CreateSubcategory  = (Item, historypusher) => dispatch => {
+export const CreateSubcategory = (Item, historypusher) => dispatch => {
     dispatch({ type: ACTION_TYPES.CREATE_SUBCATEGORY_INIT })
     axios({
         method: `post`,
@@ -78,7 +78,7 @@ export const CreateSubcategory  = (Item, historypusher) => dispatch => {
         })
 }
 
-export const UpdateSubcategory  = (Item, historypusher) => dispatch => {
+export const UpdateSubcategory = (Item, historypusher) => dispatch => {
     dispatch({ type: ACTION_TYPES.EDIT_SUBCATEGORY_INIT })
     axios({
         method: `put`,
@@ -98,7 +98,7 @@ export const UpdateSubcategory  = (Item, historypusher) => dispatch => {
         })
 }
 
-export const DeleteSubcategory  = (Item) => dispatch => {
+export const DeleteSubcategory = (Item) => dispatch => {
     dispatch({ type: ACTION_TYPES.DELETE_SUBCATEGORY_INIT })
     axios({
         method: `delete`,
@@ -108,6 +108,19 @@ export const DeleteSubcategory  = (Item) => dispatch => {
     })
         .then(() => {
             dispatch({ type: ACTION_TYPES.DELETE_SUBCATEGORY_SUCCESS })
+            dispatch({ type: ACTION_TYPES.GET_ALLSUBCATEGORIES_INIT })
+            axios({
+                method: `get`,
+                url: process.env.REACT_APP_BACKEND_URL + `/${ROUTES.SUBCATEGORIES}/GetAll`,
+                headers: { Authorization: `Bearer ${GetToken()}` }
+            })
+                .then(response => {
+                    dispatch({ type: ACTION_TYPES.GET_ALLSUBCATEGORIES_SUCCESS, payload: response.data })
+                })
+                .catch(error => {
+                    dispatch({ type: ACTION_TYPES.get, payload: error })
+                    AxiosErrorHandle(error, ROUTES.GET_ALLSUBCATEGORIES_ERROR, "GetAll")
+                })
             Popup("Success", "Alt Kategoriler", "Alt Kategori Silindi")
         })
         .catch(error => {
@@ -116,7 +129,7 @@ export const DeleteSubcategory  = (Item) => dispatch => {
         })
 }
 
-export const ClearSelectedSubcategory  = () => dispatch => {
+export const ClearSelectedSubcategory = () => dispatch => {
     dispatch({ type: ACTION_TYPES.REMOVE_SELECTEDSUBCATEGORY })
 }
 

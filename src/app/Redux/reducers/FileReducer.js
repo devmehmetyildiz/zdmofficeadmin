@@ -2,17 +2,15 @@ import { ACTION_TYPES } from "../actions/FileActions"
 
 const INITIAL_STATE = {
   list: [],
-  selected_file: {
+  selected_record: {
     id: 0,
     name: "",
     filename:'',
     filefolder: "",
     filepath: "",
     filetype: "",
-    downloadedcount: "",
-    lastdownloadeduser: "",
-    lastdownloadedip: "",
-    concurrencyStamp: null,
+    productuuid :"",
+    uuid: null,
     createdUser: "",
     updatedUser: null,
     deleteUser: null,
@@ -40,11 +38,11 @@ export const FileReducer = (state = INITIAL_STATE, { type, payload }) => {
     case ACTION_TYPES.GET_SELECTEDFILE_INIT:
       return { ...state, isLoading: true }
     case ACTION_TYPES.GET_SELECTEDFILE_SUCCESS:
-      return { ...state, selected_file: payload, isSelected: true, isLoading: false }
+      return { ...state, selected_record: payload, isSelected: true, isLoading: false }
     case ACTION_TYPES.GET_SELECTEDFILE_ERROR:
       return { ...state, errmsg: payload, isLoading: true }
     case ACTION_TYPES.REMOVE_SELECTEDFILE:
-      return { ...state, selected_file: INITIAL_STATE.selected_file, isSelected: false }
+      return { ...state, selected_record: INITIAL_STATE.selected_record, isSelected: false }
     case ACTION_TYPES.EDIT_FILE_INIT:
       return { ...state, isLoading: true }
     case ACTION_TYPES.EDIT_FILE_SUCCESS:

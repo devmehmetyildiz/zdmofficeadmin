@@ -23,19 +23,21 @@ export class Create extends Component {
             createdtime: null,
             updatetime: null,
             deletetime: null,
-            isActive: true
+            isActive: true,
+            category : {}
         }
         const selectedcategories = {}
         const categories = []
-        this.state = { currentitem, selectedcategories, categories };
+        const Isdatafetched = false
+        this.state = { currentitem, selectedcategories, categories, Isdatafetched };
     }
 
     handlesubmit = (e) => {
         e.preventDefault()
         const newdata = { ...this.state.currentitem }
-        newdata.categoryuui = selectedcategories.uuid
+        newdata.categoryuui = this.state.selectedcategories.value
         this.setState({ currentitem: newdata }, () => {
-            this.props.CreateCase(this.state.currentitem, this.props.history)
+            this.props.CreateSubcategory(this.state.currentitem, this.props.history)
         })
     }
 
@@ -44,16 +46,15 @@ export class Create extends Component {
     }
     componentDidUpdate() {
         if (
-            this.props.Subcategories.selected_record.id !== 0 &&
             !this.props.Subcategories.isLoading &&
             !this.props.Categories.isLoading &&
-            !this.props.Categories.list.lenght >0 &&
-            this.state.currentitem.id === 0
+            this.props.Categories.list.length > 0 &&
+            !this.state.Isdatafetched
         ) {
             const list = this.props.Categories.list.map((item, index) => {
                 return { value: item.uuid, label: item.name }
             })
-            this.setState({ categories: list })
+            this.setState({ categories: list, Isdatafetched: true })
         }
     }
 
@@ -69,12 +70,12 @@ export class Create extends Component {
     }
 
     handleselect = (e) => {
-        this.setState({ selecteddepartments: e })
+        this.setState({ selectedcategories: e })
     }
 
     render() {
-        const list = this.state.departments
-        const isLoading = (this.props.Departments.isLoading || this.props.Cases.isLoading)
+        const list = this.state.categories
+        const isLoading = (this.props.Subcategories.isLoading || this.props.Categories.isLoading)
         return (
             <>
                 {isLoading ? <Spinner /> :
@@ -86,7 +87,7 @@ export class Create extends Component {
                                     <form className="form-sample" onSubmit={this.handlesubmit}>
                                         <div className="row">
                                             <InputItem
-                                                itemrowspan="1"
+                                                itemrowspan="2"
                                                 itemname="isim"
                                                 itemid="name"
                                                 itemvalue={this.state.currentitem.name}
@@ -94,25 +95,15 @@ export class Create extends Component {
                                                 itemplaceholder="İsim"
                                                 itemchange={this.handleonchange}
                                             />
-                                            <InputItem
-                                                itemrowspan="1"
-                                                itemname="Durum Değeri"
-                                                itemid="caseStatus"
-                                                itemvalue={this.state.currentitem.caseStatus}
-                                                itemtype="number"
-                                                itemplaceholder="Durum Değeri"
-                                                itemchange={this.handleonchange}
-                                            />
                                         </div>
                                         <div className='row'>
-                                            <label style={{ fontSize: "12px" }} className="col-form-label">Departmanlar</label>
+                                            <label style={{ fontSize: "12px" }} className="col-form-label">Üst Kategori</label>
                                         </div>
                                         <div className='row'>
                                             <div style={{ marginRight: '-5px' }} className='col-12 pr-5 mb-3'>
                                                 <Select
-                                                    value={this.state.selecteddepartments}
+                                                    value={this.state.selectedcategories}
                                                     onChange={this.handleselect}
-                                                    isMulti={true}
                                                     options={list}
                                                 />
                                             </div>

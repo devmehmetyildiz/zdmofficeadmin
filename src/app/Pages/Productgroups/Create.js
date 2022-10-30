@@ -3,110 +3,107 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom';
 import InputItem from '../../Components/Common/Forminput'
 import "../../../assets/styles/Pages/Create.scss"
-import { CreateFile } from "../../Redux/actions/FileActions"
+import { CreateProductgroups } from "../../Redux/actions/ProductgroupsActions"
+import { GetAllCategories } from "../../Redux/actions/CategoriesActions"
+import { GetAllSubcategories } from "../../Redux/actions/SubcategoriesActions"
 import Spinner from '../../shared/Spinner'
 import Select from 'react-select';
 
 export class Create extends Component {
+
     constructor(props) {
         super(props)
-        const defaultImageSrc = '/img/user.png'
-        const defaultPDFSrc = '/img/imgpdf.png'
-        
-        const initialfieldvalues = {
+        const currentitem = {
             id: 0,
             name: "",
-            filename: '',
-            filefolder: ' ',
-            filetype: ' ',
-            downloadedcount: 0,
-            lastdownloadeduser: ' ',
-            lastdownloadedip: ' ',
-            filepath: defaultImageSrc,
-            file: null,
-            concurrencyStamp: '',
-            createdUser: '',
-            updatedUser: '',
-            deleteUser: '',
-            createTime: null,
-            updateTime: null,
-            deleteTime: null,
-            isActive: false
+            isSet: false,
+            price: 0,
+            uuid: null,
+            createduser: "",
+            updateduser: null,
+            deleteuser: null,
+            createdtime: null,
+            updatetime: null,
+            deletetime: null,
+            isActive: true,
+            products: [],
+            categoryuuid: "",
+            subcategoryuuid: "",
+            category: {},
+            subcategory: {}
         }
-        const values = initialfieldvalues
-        const errors = {}
-        this.state = { values, defaultImageSrc,defaultPDFSrc, errors }
+        const selectedsetstatus = {}
+        const categories = []
+        const subcategories = []
+        const isDataFetched = false
+        const selectedcategory = {}
+        const selectedsubcategory = {}
+        this.state = { currentitem, selectedsetstatus, categories, subcategories, isDataFetched, selectedcategory, selectedsubcategory };
     }
-    handleInputChange = (e) => {
-        const { name, value } = e.target
-        const newdata = { ...this.state.values }
-        newdata[name] = value
-        this.setState({ values: newdata })
-    }
-    showPreview = e => {
-        if (e.target.files && e.target.files[0]) {
-            let file = e.target.files[0]
-            console.log('file: ', file);
-            const reader = new FileReader()
-            reader.onload = x => {
-                const newdata = { ...this.state.values }
-                newdata.file = file
-                if (file.type === "application/pdf") {
-                    newdata.filepath = this.state.defaultPDFSrc
-                }
-                else {
-                    newdata.filepath = x.target.result
-                }
-                this.setState({ values: newdata })
-            }
-            reader.readAsDataURL(file)
-        } else {
-            const newdata = { ...this.state.values }
-            newdata.file = null
-            newdata.filepath = this.state.defaultImageSrc
-            this.setState({ values: newdata })
-        }
-    }
-    validate = () => {
-        let temp = {}
-        temp.name = this.state.values.name == "" ? false : true
-        temp.filepath = this.state.values.filepath == this.state.defaultImageSrc ? false : true
-        this.setState({ errors: temp })
-        return Object.values(temp).every(x => x == true)
-    }
-    resetForm = () => {
-        this.setState({ values: this.state.initialfieldvalues })
-    }
-    handleSubmit = e => {
+
+    handlesubmit = (e) => {
         e.preventDefault()
-        if (this.validate()) {
-            const formData = new FormData();
-            formData.append('id', this.state.values.id);
-            formData.append('name', this.state.values.name);
-            formData.append('filefolder', this.state.values.filefolder);
-            formData.append('filetype', this.state.values.filetype);
-            formData.append('downloadedcount', this.state.values.downloadedcount);
-            formData.append('lastdownloadeduser', this.state.values.lastdownloadeduser);
-            formData.append('lastdownloadedip', this.state.values.lastdownloadedip);
-            formData.append('file', this.state.values.file);
-            formData.append('concurrencyStamp', this.state.values.concurrencyStamp);
-            formData.append('createdUser', this.state.values.createdUser);
-            formData.append('updatedUser', this.state.values.updatedUser);
-            formData.append('deleteUser', this.state.values.deleteUser);
-            formData.append('isActive', this.state.values.isActive);
-            this.props.CreateFile(formData, this.props.history, this.state.values.name)
-        }
+        const newdata = { ...this.state.currentitem }
+        newdata.isSet = this.state.selectedsetstatus.value
+        newdata.categoryuuid = this.state.selectedcategory.value
+        newdata.subcategoryuuid = this.state.selectedsubcategory.value
+        this.setState({ currentitem: newdata }, () => {
+            this.props.CreateProductgroups(this.state.currentitem, this.props.history)
+        })
     }
 
     goBack = (e) => {
         e.preventDefault()
-        this.props.history.push("/Files")
+        this.props.history.push("/Productgroups")
     }
 
-    applyerrorclass = field => ((field in this.state.errors && this.state.errors[field] == false) ? ' invalid-field' : '')
+    handleonchange = (e) => {
+        const newdata = { ...this.state.currentitem }
+        newdata[e.target.id] = e.target.value
+        this.setState({ currentitem: newdata })
+    }
+
+    handleselect = (e) => {
+        this.setState({ selectedsetstatus: e })
+    }
+
+    handleselectcategories = (e) => {
+        this.setState({ selectedcategory: e })
+    }
+
+    handleselectsubcategories = (e) => {
+        this.setState({ selectedsubcategory: e })
+    }
+
+    componentDidMount() {
+        this.props.GetAllCategories()
+        this.props.GetAllSubcategories()
+    }
+
+    componentDidUpdate() {
+        if (
+            this.props.Categories.list.length > 0 &&
+            this.props.Subcategories.list.length > 0 &&
+            !this.props.Categories.isLoading &&
+            !this.props.Subcategories.isLoading &&
+            !this.state.isDataFetched
+        ) {
+            const categorylist = this.props.Categories.list.map(item => {
+                return { value: item.uuid, label: item.name }
+            })
+            const subcategorylist = this.props.Subcategories.list.map(item => {
+                return { value: item.uuid, label: item.name }
+            })
+            this.setState({ categories: categorylist, subcategories: subcategorylist, isDataFetched: true })
+        }
+    }
 
     render() {
-        const isLoading = this.props.Files.isLoading
+        const isLoading = (this.props.Productgroups.isLoading)
+        const list = [
+            { value: false, label: 'Set Ürün Değil' },
+            { value: true, label: 'Set Ürün' }
+        ]
         return (
             <>
                 {isLoading ? <Spinner /> :
@@ -114,60 +111,89 @@ export class Create extends Component {
                         <div className="col-12 grid-margin">
                             <div className="card">
                                 <div className="card-body">
-                                    <h4 className="card-title">Dosya Yükleme Erkanı</h4>
-                                    <form onSubmit={this.handleSubmit} autoComplete='off' noValidate>
+                                    <h4 className="card-title">Ürün Grubu > Yeni</h4>
+                                    <form className="form-sample" onSubmit={this.handlesubmit}>
+                                        <div className="row">
+                                            <InputItem
+                                                itemrowspan="2"
+                                                itemname="isim"
+                                                itemid="name"
+                                                itemvalue={this.state.currentitem.name}
+                                                itemtype="text"
+                                                itemplaceholder="İsim"
+                                                itemchange={this.handleonchange}
+                                            />
+                                        </div>
                                         <div className='row'>
-                                            <div className='col'>
-                                                <img style={{ objectFit: 'contain', margin: '10px', width: '200px', height: '200px' }} src={this.state.values.filepath} className="card-img-top" />
-                                                <div className='form-group'>
-                                                    <input className={"form-control-file" + this.applyerrorclass('filepath')} type="file"
-                                                        onChange={this.showPreview}
-                                                    />
-                                                </div>
-                                                <div className='form-group'>
-                                                    <label>Dosya Adı</label>
-                                                    <input className={"form-control" + this.applyerrorclass('name')} placeholder=' Name' name='name'
-                                                        value={this.state.values.name}
-                                                        onChange={this.handleInputChange}
-                                                    />
-                                                </div>
-                                                <div className='row d-flex pr-5 justify-content-end align-items-right'>
-                                                    <button onClick={this.goBack} style={{ minWidth: '150px' }} className="btn btn-dark mr-2">Geri Dön</button>
-                                                    <button type="submit" style={{ minWidth: '150px' }} className="btn btn-primary mr-2">Ekle</button>
-                                                </div>
+                                            <label style={{ fontSize: "12px" }} className="col-form-label">Set Ürün Seçimi</label>
+                                        </div>
+                                        <div className='row'>
+                                            <div style={{ marginRight: '-5px' }} className='col-12 pr-5 mb-3'>
+                                                <Select
+                                                    value={this.state.selectedsetstatus}
+                                                    onChange={this.handleselect}
+                                                    options={list}
+                                                />
                                             </div>
-                                            <div className='col mr-5'>
-                                                <div className='row'>
-                                                    <label>Dosya Adı : {this.state.values.name}</label>
-                                                </div>
-                                                <div className='row'>
-                                                    <label>İndirilme Sayısı : {this.state.values.downloadedcount}</label>
-                                                </div>
-                                                <div className='row'>
-                                                    <label>En Son İndiren Kullanıcı: {this.state.values.lastdownloadeduser}</label>
-                                                </div>
-                                                <div className='row'>
-                                                    <label>En Son İndiren ip Adresi: {this.state.values.lastdownloadedip}</label>
-                                                </div>
-                                                <div className='row'>
-                                                    <label>En Son İndiren ip Adresi: {this.state.values.lastdownloadedip}</label>
-                                                </div>
+                                        </div>
+                                        {this.state.selectedsetstatus.value ?
+                                            <div className="row">
+                                                <InputItem
+                                                    itemrowspan="2"
+                                                    itemname="Set Fiyatı"
+                                                    itemid="price"
+                                                    itemvalue={this.state.currentitem.price}
+                                                    itemtype="number"
+                                                    itemplaceholder="Set Fiyatı"
+                                                    itemchange={this.handleonchange}
+                                                />
                                             </div>
+                                            : null}
+                                        <div className='row'>
+                                            <label style={{ fontSize: "12px" }} className="col-form-label">Kategori</label>
+                                        </div>
+                                        <div className='row'>
+                                            <div style={{ marginRight: '-5px' }} className='col-12 pr-5 mb-3'>
+                                                <Select
+                                                    value={this.state.selectedcategory}
+                                                    onChange={this.handleselectcategories}
+                                                    options={this.state.categories}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className='row'>
+                                            <label style={{ fontSize: "12px" }} className="col-form-label">Alt Kategori</label>
+                                        </div>
+                                        <div className='row'>
+                                            <div style={{ marginRight: '-5px' }} className='col-12 pr-5 mb-3'>
+                                                <Select
+                                                    value={this.state.selectedsubcategory}
+                                                    onChange={this.handleselectsubcategories}
+                                                    options={this.state.subcategories}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className='row d-flex pr-5 justify-content-end align-items-right'>
+                                            <button onClick={this.goBack} style={{ minWidth: '150px' }} className="btn btn-dark mr-2">Geri Dön</button>
+                                            <button type="submit" style={{ minWidth: '150px' }} className="btn btn-primary mr-2">Ekle</button>
                                         </div>
                                     </form>
                                 </div>
                             </div>
                         </div>
-                    </div >
+                    </div>
                 }
             </>
         )
     }
 }
+
 const mapStateToProps = (state) => ({
-    Files: state.Files,
+    Productgroups: state.Productgroups,
+    Categories: state.Categories,
+    Subcategories: state.Subcategories
 })
 
-const mapDispatchToProps = { CreateFile }
+const mapDispatchToProps = { CreateProductgroups, GetAllCategories, GetAllSubcategories }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Create))

@@ -13,7 +13,8 @@ const INITIAL_STATE = {
     createdtime: null,
     updatetime: null,
     deletetime: null,
-    isActive: true
+    isActive: true,
+    category : {}
   },
   errmsg: "",
   isLoading: false,

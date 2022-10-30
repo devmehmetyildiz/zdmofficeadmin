@@ -15,7 +15,11 @@ const INITIAL_STATE = {
     updatetime: null,
     deletetime: null,
     isActive: true,
-    products:[]
+    products: [],
+    categoryuuid: "",
+    subcategoryuuid: "",
+    category: {},
+    subcategory: {}
   },
   errmsg: "",
   isLoading: false,
