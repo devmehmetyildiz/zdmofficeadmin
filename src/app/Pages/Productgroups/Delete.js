@@ -2,14 +2,14 @@ import React, { Component } from 'react'
 import { Button, Modal } from 'react-bootstrap';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom';
-import { GetAllSubcategories, GetSelectedSubcategory, CloseDeleteModal, DeleteSubcategory, ClearSelectedSubcategory } from '../../Redux/actions/SubcategoriesActions'
+import { GetAllProductgroups, GetSelectedProductgroups, CloseDeleteModal, DeleteProductgroups, ClearSelectedProductgroups } from '../../Redux/actions/ProductgroupsActions'
 
 export class Delete extends Component {
 
   DeleteHandle = async () => {
-    await this.props.DeleteSubcategory(this.props.Subcategories.selected_record)
-    await this.props.ClearSelectedSubcategory()
-    await this.props.GetAllSubcategories()
+    await this.props.DeleteProductgroups(this.props.Subcategories.selected_record)
+    await this.props.ClearSelectedProductgroups()
+    await this.props.GetAllProductgroups()
     await this.props.CloseDeleteModal()
   }
 
@@ -32,7 +32,7 @@ export class Delete extends Component {
         </Modal.Header>
         <Modal.Body>
           <p>
-            {this.props.Subcategories.selected_record.name} kategorisini silmek istediğinize Eminmisiniz?
+            {this.props.Subcategories.selected_record.name} ürün grubunu silmek istediğinize Eminmisiniz?
           </p>
         </Modal.Body>
         <Modal.Footer>
@@ -48,7 +48,7 @@ const mapStateToProps = (state) => ({
   Subcategories: state.Subcategories,
 })
 
-const mapDispatchToProps = { GetAllSubcategories, GetSelectedSubcategory, CloseDeleteModal, DeleteSubcategory, ClearSelectedSubcategory }
+const mapDispatchToProps = { GetAllProductgroups, GetSelectedProductgroups, CloseDeleteModal, DeleteProductgroups, ClearSelectedProductgroups }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Delete))
 

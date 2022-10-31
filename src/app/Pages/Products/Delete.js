@@ -2,19 +2,19 @@ import React, { Component } from 'react'
 import { Button, Modal } from 'react-bootstrap';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom';
-import { GetAllSubcategories, GetSelectedSubcategory, CloseDeleteModal, DeleteSubcategory, ClearSelectedSubcategory } from '../../Redux/actions/SubcategoriesActions'
+import { GetAllProducs, GetSelectedProduct, CloseDeleteModal, DeleteProduct, ClearSelectedProduct } from '../../Redux/actions/ProductsActions'
 
 export class Delete extends Component {
 
   DeleteHandle = async () => {
-    await this.props.DeleteSubcategory(this.props.Subcategories.selected_record)
-    await this.props.ClearSelectedSubcategory()
-    await this.props.GetAllSubcategories()
+    await this.props.DeleteProduct(this.props.Subcategories.selected_record)
+    await this.props.ClearSelectedProduct()
+    await this.props.GetAllProducs()
     await this.props.CloseDeleteModal()
   }
 
   componentWillUnmount() {
-    this.props.ClearSelectedSubcategory()
+    this.props.ClearSelectedProduct()
   }
 
   render() {
@@ -27,12 +27,12 @@ export class Delete extends Component {
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            Alt Kategori Silme
+            Ürün Silme
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p>
-            {this.props.Subcategories.selected_record.name} kategorisini silmek istediğinize Eminmisiniz?
+            {this.props.Products.selected_record.name} ürününü silmek istediğinize Eminmisiniz?
           </p>
         </Modal.Body>
         <Modal.Footer>
@@ -45,10 +45,10 @@ export class Delete extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  Subcategories: state.Subcategories,
+  Products: state.Products,
 })
 
-const mapDispatchToProps = { GetAllSubcategories, GetSelectedSubcategory, CloseDeleteModal, DeleteSubcategory, ClearSelectedSubcategory }
+const mapDispatchToProps = { GetAllProducs, GetSelectedProduct, CloseDeleteModal, DeleteProduct, ClearSelectedProduct }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Delete))
 

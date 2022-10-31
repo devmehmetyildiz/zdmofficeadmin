@@ -70,7 +70,7 @@ export class Productgroups extends Component {
         },
         events: {
           onClick: (e, column, columnIndex, row, rowIndex) => {
-            this.props.history.push('/Categories/' + row.uuid)
+            this.props.history.push('/Productgroups/' + row.uuid)
           }
         }
       }

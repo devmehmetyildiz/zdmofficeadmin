@@ -24,13 +24,26 @@ export class Products extends Component {
         Formatheader: true
 
       }, {
-        dataField: 'name',
-        text: 'İsim',
+        dataField: 'productgroup.name',
+        text: 'Grup adı',
         Columntype: COLUMNTYPES.TEXT,
         Formatheader: true,
-      }, {
-        dataField: 'uuid',
-        text: 'Benzersiz ID',
+      },
+      {
+        dataField: 'productcode',
+        text: 'Ürün Kodu',
+        Columntype: COLUMNTYPES.TEXT,
+        Formatheader: true,
+      },
+      {
+        dataField: 'dimension',
+        text: 'Ölçüler',
+        Columntype: COLUMNTYPES.TEXT,
+        Formatheader: true,
+      },
+      {
+        dataField: 'price',
+        text: 'Fiyat',
         Columntype: COLUMNTYPES.TEXT,
         Formatheader: true,
       }, {
