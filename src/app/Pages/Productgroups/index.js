@@ -29,11 +29,6 @@ export class Productgroups extends Component {
         Columntype: COLUMNTYPES.TEXT,
         Formatheader: true,
       }, {
-        dataField: 'uuid',
-        text: 'Benzersiz ID',
-        Columntype: COLUMNTYPES.TEXT,
-        Formatheader: true,
-      }, {
         dataField: 'isSet',
         text: 'Set Ürünmü ? ',
         Columntype: COLUMNTYPES.TEXT,
@@ -52,6 +47,12 @@ export class Productgroups extends Component {
       }, {
         dataField: 'subcategory.name',
         text: 'Alt kategori',
+        Columntype: COLUMNTYPES.TEXT,
+        Formatheader: true,
+      },
+      {
+        dataField: 'company.name',
+        text: 'Firma',
         Columntype: COLUMNTYPES.TEXT,
         Formatheader: true,
       }
@@ -95,7 +96,52 @@ export class Productgroups extends Component {
       }
 
     ];
-    this.state = { currentitem, columns, isLoading };
+    const expandRow = {
+      renderer: row => {
+        return <div className='w-100 p-4'>
+          <table  className='w-100'>
+          <thead>
+            <tr>
+              <th>Ürün Fotoğrafı</th>
+              <th>Ürün Adı</th>
+              <th>Ürün Kodu</th>
+              <th>Ürün Ebatları</th>
+              <th>Ürün Ürün Fiyatı</th>
+            </tr>
+          </thead>
+          <tbody>
+            {row.products.map(item =>
+              <tr>
+                <th><img src={`${process.env.REACT_APP_BACKEND_URL}/${ROUTES.PRODUCTS}/GetImage?guid=${item.uuid}`} style={{ width: '60px', height: '60px' }} /></th>
+                <th>{item.name}</th>
+                <th>  {item.productcode}</th>
+                <th>  {item.dimension}</th>
+                <th> {item.price} <span>TL</span></th>
+              </tr>)}
+          </tbody>
+        </table>
+        </div>
+      },
+      showExpandColumn: true,
+      onlyOneExpanding: true,
+      expandHeaderColumnRenderer: ({ isAnyExpands }) => {
+        if (isAnyExpands) {
+          return <b>-</b>;
+        }
+        return <b>+</b>;
+      },
+      expandColumnRenderer: ({ expanded }) => {
+        if (expanded) {
+          return (
+            <b>-</b>
+          );
+        }
+        return (
+          <b>...</b>
+        );
+      }
+    };
+    this.state = { currentitem, columns, isLoading, expandRow };
   }
 
   handleDeleteRole = async (e, row) => {
@@ -110,6 +156,9 @@ export class Productgroups extends Component {
   componentDidMount() {
     this.props.GetAllProductgroups();
   }
+
+
+
 
   render() {
     const { isLoading, list } = this.props.Productgroups;
@@ -134,7 +183,7 @@ export class Productgroups extends Component {
                       <button style={{ minWidth: '120px', height: '30px' }} onClick={this.handleonaddnew} className="btn btn-primary mr-2">Yeni Ürün Grubu Ekle</button>
                     </div>
                   </div>
-                  <Datatable columns={this.state.columns} data={list} />
+                  <Datatable expandrow={this.state.expandRow} columns={this.state.columns} data={list} />
                 </div>
               </div>
             </div>

@@ -11,7 +11,7 @@ import "../../assets/styles/Pages/File.scss"
 
 
 export const Datatable = (props) => {
-    const { columns, data } = props
+    const { columns, data,expandrow } = props
     const [filters, setfilters] = useState([])
     const [showFilter, setshowFilter] = useState(false)
     const defaultSorted = [{
@@ -119,6 +119,7 @@ export const Datatable = (props) => {
                                         {...props.baseProps}
                                         filter={filterFactory()}
                                         wrapperClasses="table-responsive"
+                                        expandRow={ expandrow }
                                     />
                                 </div>
                             )

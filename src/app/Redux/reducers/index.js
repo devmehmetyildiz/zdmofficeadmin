@@ -5,6 +5,7 @@ import { ProductgroupsReducer } from "./ProductgroupsReducer"
 import { ProductsReducer } from "./ProductsReducer"
 import { SubcategoriesReducer } from "./SubcategoriesReducer"
 import { FileReducer } from "./FileReducer"
+import { CompanyReducer } from "./CompanyReducer";
 
 const reducers = combineReducers({
     ActiveUser: loginReducer,
@@ -13,6 +14,7 @@ const reducers = combineReducers({
     Products : ProductsReducer, 
     Subcategories : SubcategoriesReducer, 
     Files: FileReducer,
+    Companies : CompanyReducer
 });
 
 export default reducers;

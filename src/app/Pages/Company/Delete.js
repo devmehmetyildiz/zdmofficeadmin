@@ -2,19 +2,19 @@ import React, { Component } from 'react'
 import { Button, Modal } from 'react-bootstrap';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom';
-import { GetAllProductgroups, GetSelectedProductgroups, CloseDeleteModal, DeleteProductgroups, ClearSelectedProductgroups } from '../../Redux/actions/ProductgroupsActions'
+import { GetAllCompanies,GetSelectedCompany, CloseDeleteModal, DeleteCompany,ClearSelectedCompany } from '../../Redux/actions/CompanyActions'
 
 export class Delete extends Component {
 
   DeleteHandle = async () => {
-    await this.props.DeleteProductgroups(this.props.Subcategories.selected_record)
-    await this.props.ClearSelectedProductgroups()
-    await this.props.GetAllProductgroups()
+    await this.props.DeleteCompany(this.props.Companies.selected_record)
+    await this.props.ClearSelectedCompany()
+    await this.props.GetAllCompanies()
     await this.props.CloseDeleteModal()
   }
 
   componentWillUnmount() {
-    this.props.ClearSelectedProductgroups()
+    this.props.ClearSelectedCompany()
   }
 
   render() {
@@ -27,12 +27,12 @@ export class Delete extends Component {
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            Alt Kategori Silme
+            Firma Silme
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p>
-            {this.props.Subcategories.selected_record.name} ürün grubunu silmek istediğinize Eminmisiniz?
+            {this.props.Companies.selected_record.name} Firmasını silmek istediğinize Eminmisiniz?
           </p>
         </Modal.Body>
         <Modal.Footer>
@@ -45,10 +45,10 @@ export class Delete extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  Subcategories: state.Subcategories,
+  Companies: state.Companies,
 })
 
-const mapDispatchToProps = { GetAllProductgroups, GetSelectedProductgroups, CloseDeleteModal, DeleteProductgroups, ClearSelectedProductgroups }
+const mapDispatchToProps = { GetAllCompanies,GetSelectedCompany, CloseDeleteModal, DeleteCompany,ClearSelectedCompany }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Delete))
 

@@ -74,10 +74,10 @@ class Sidebar extends Component {
               <span className="menu-title"><Trans>Ürün Grupları</Trans></span>
             </Link>
           </li>
-          <li className={this.isPathActive('/Products') ? 'nav-item menu-items active' : 'nav-item menu-items'}>
-            <Link className="nav-link" to="/Products">
+          <li className={this.isPathActive('/Companies') ? 'nav-item menu-items active' : 'nav-item menu-items'}>
+            <Link className="nav-link" to="/Companies">
               <span className="menu-icon"><i className="mdi mdi-speedometer"></i></span>
-              <span className="menu-title"><Trans>Ürünler</Trans></span>
+              <span className="menu-title"><Trans>Firmalar</Trans></span>
             </Link>
           </li>
           <li className={this.isPathActive('/Files') ? 'nav-item menu-items active' : 'nav-item menu-items'}>

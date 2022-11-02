@@ -14,7 +14,7 @@ export class Delete extends Component {
   }
 
   componentWillUnmount() {
-    this.props.ClearSelectedSubcategory()
+   this.props.ClearSelectedSubcategory()
   }
 
   render() {

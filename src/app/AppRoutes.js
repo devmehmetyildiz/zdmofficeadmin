@@ -19,6 +19,10 @@ const Products = lazy(() => import('./Pages/Products'));
 const ProductsCreate = lazy(() => import('./Pages/Products/Create'));
 const ProductsEdit = lazy(() => import('./Pages/Products/Edit'));
 
+const Companies = lazy(() => import('./Pages/Company'));
+const CompaniesCreate = lazy(() => import('./Pages/Company/Create'));
+const CompaniesEdit = lazy(() => import('./Pages/Company/Edit'));
+
 const Files = lazy(() => import('./Pages/Files'));
 const FilesCreate = lazy(() => import('./Pages/Files/Create'));
 const FilesEdit = lazy(() => import('./Pages/Files/Edit'));
@@ -37,6 +41,10 @@ class AppRoutes extends Component {
           <ProtectedRoute exact path="/Categories" component={ Categories } />
           <ProtectedRoute exact path="/Categories/Create" component={ CategoriesCreate } />
           <ProtectedRoute exact path="/Categories/:Id" component={ CategoriesEdit } />
+
+          <ProtectedRoute exact path="/Companies" component={ Companies } />
+          <ProtectedRoute exact path="/Companies/Create" component={ CompaniesCreate } />
+          <ProtectedRoute exact path="/Companies/:Id" component={ CompaniesEdit } />
 
           <ProtectedRoute exact path="/Subcategories" component={ Subcategories } />
           <ProtectedRoute exact path="/Subcategories/Create" component={ SubcategoriesCreate } />

@@ -1,22 +1,19 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { COLUMNTYPES, ROUTES } from '../../Utils/Constants';
-import { GetAllProducs, GetSelectedProduct, OpenDeleteModal, CloseDeleteModal } from '../../Redux/actions/ProductsActions'
+import { GetAllCompanies, GetSelectedCompany, OpenDeleteModal, CloseDeleteModal } from '../../Redux/actions/CompanyActions'
 import { withRouter } from 'react-router-dom';
 import Spinner from "../../shared/Spinner"
 import DeleteModal from "./Delete"
 import "../../../assets/styles/Pages/File.scss"
 import Datatable from '../../Utils/Datatable';
 
-export class Products extends Component {
+export class Company extends Component {
 
   constructor(props) {
     super(props)
     var currentitem = []
     const isLoading = true
-
-
-
 
     const columns = [
       {
@@ -27,37 +24,13 @@ export class Products extends Component {
         Formatheader: true
 
       }, {
-        dataField: 'productgroup.name',
-        text: 'Grup adı',
+        dataField: 'name',
+        text: 'İsim',
         Columntype: COLUMNTYPES.TEXT,
         Formatheader: true,
-        formatter: (cellContent, row) => {
-          return <div className='containerclassheader'>
-            <div className='d-inline'>
-              {
-              }
-              <img src={`${process.env.REACT_APP_BACKEND_URL}/${ROUTES.PRODUCTS}/GetImage?guid=${row.uuid}`} />
-            </div>
-            <div className='ml-2 d-inline text-nowrap'>
-              {cellContent}
-            </div>
-          </div>
-        }
-      },{
-        dataField: 'productcode',
-        text: 'Ürün Kodu',
-        Columntype: COLUMNTYPES.TEXT,
-        Formatheader: true,
-      },
-      {
-        dataField: 'dimension',
-        text: 'Ölçüler',
-        Columntype: COLUMNTYPES.TEXT,
-        Formatheader: true,
-      },
-      {
-        dataField: 'price',
-        text: 'Fiyat',
+      }, {
+        dataField: 'uuid',
+        text: 'Benzersiz ID',
         Columntype: COLUMNTYPES.TEXT,
         Formatheader: true,
       }, {
@@ -75,7 +48,7 @@ export class Products extends Component {
         },
         events: {
           onClick: (e, column, columnIndex, row, rowIndex) => {
-            this.props.history.push('/Products/' + row.uuid)
+            this.props.history.push('/Companies/' + row.uuid)
           }
         }
       }
@@ -100,28 +73,34 @@ export class Products extends Component {
       }
 
     ];
+
     this.state = { currentitem, columns, isLoading };
   }
 
+
+
+
   handleDeleteRole = async (e, row) => {
-    await this.props.GetSelectedProduct(row.uuid)
+    await this.props.GetSelectedCompany(row.uuid)
     this.props.OpenDeleteModal()
   }
 
+  
+
   handleonaddnew = (e) => {
-    this.props.history.push("/Products/Create")
+    this.props.history.push("/Companies/Create")
   }
 
   componentDidMount() {
-    this.props.GetAllProducs();
+    this.props.GetAllCompanies();
   }
 
   render() {
-    const { isLoading, list } = this.props.Products;
+    const { isLoading, list } = this.props.Companies;
     return (
       <div>
         <DeleteModal
-          show={this.props.Products.isModalOpen}
+          show={this.props.Companies.isModalOpen}
           onHide={() => {
             this.props.CloseDeleteModal()
           }}
@@ -133,10 +112,10 @@ export class Products extends Component {
                 <div className="card-body">
                   <div className='row'>
                     <div className='col-6 d-flex justify-content-start'>
-                      <h4 className="card-title">Ürünler</h4>
+                      <h4 className="card-title">Firmalar</h4>
                     </div>
                     <div className='col-6 d-flex justify-content-end'>
-                      <button style={{ minWidth: '120px', height: '30px' }} onClick={this.handleonaddnew} className="btn btn-primary mr-2">Yeni Ürün Ekle</button>
+                      <button style={{ minWidth: '120px', height: '30px' }} onClick={this.handleonaddnew} className="btn btn-primary mr-2">Yeni Firma Ekle</button>
                     </div>
                   </div>
                   <Datatable columns={this.state.columns} data={list} />
@@ -151,9 +130,9 @@ export class Products extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  Products: state.Products
+  Companies: state.Companies
 })
 
-const mapDispatchToProps = { GetAllProducs, GetSelectedProduct, OpenDeleteModal, CloseDeleteModal }
+const mapDispatchToProps = { GetAllCompanies, GetSelectedCompany, OpenDeleteModal, CloseDeleteModal }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Products))
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Company))

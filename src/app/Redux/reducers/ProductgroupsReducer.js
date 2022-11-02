@@ -19,8 +19,11 @@ const INITIAL_STATE = {
     categoryuuid: "",
     subcategoryuuid: "",
     category: {},
-    subcategory: {}
+    subcategory: {},
+    companyuuid : "",
+    company: {}
   },
+  files: [],
   errmsg: "",
   isLoading: false,
   isSelected: false,
@@ -43,7 +46,7 @@ export const ProductgroupsReducer = (state = INITIAL_STATE, { type, payload }) =
     case ACTION_TYPES.GET_SELECTEDPRODUCTGROUP_ERROR:
       return { ...state, errmsg: payload, isLoading: false }
     case ACTION_TYPES.REMOVE_SELECTEDPRODUCTGROUP:
-      return { ...state, selected_record: INITIAL_STATE.selected_record, isSelected: false }
+      return { ...state, selected_record: INITIAL_STATE.selected_record, files: [], isSelected: false }
     case ACTION_TYPES.EDIT_PRODUCTGROUP_INIT:
       return { ...state, isLoading: true }
     case ACTION_TYPES.EDIT_PRODUCTGROUP_SUCCESS:
@@ -62,6 +65,12 @@ export const ProductgroupsReducer = (state = INITIAL_STATE, { type, payload }) =
       return { ...state, isLoading: false, isModalOpen: false }
     case ACTION_TYPES.DELETE_PRODUCTGROUP_ERROR:
       return { ...state, errmsg: payload, isLoading: false }
+    case ACTION_TYPES.GET_ALLFILES_INIT:
+      return { ...state, isLoading: true }
+    case ACTION_TYPES.GET_ALLFILES_SUCCESS:
+      return { ...state, files: payload, isLoading: false, isModalOpen: false }
+    case ACTION_TYPES.GET_ALLFILES_ERROR:
+      return { ...state, errmsg: payload, isLoading: false }
     case ACTION_TYPES.DELETE_MODAL_OPEN:
       return { ...state, isModalOpen: true }
     case ACTION_TYPES.DELETE_MODAL_CLOSE:
@@ -70,3 +79,5 @@ export const ProductgroupsReducer = (state = INITIAL_STATE, { type, payload }) =
       return state;
   }
 }
+
+

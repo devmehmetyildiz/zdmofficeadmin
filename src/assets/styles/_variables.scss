@@ -93,11 +93,11 @@ $font-weight-bold: 700;
 $default-font-size: .875rem; // 14px as base font size
 
 $text-muted: #6c7293;
-$body-color: #ffffff;
+//$body-color: #ffffff;
 
 
 ////////// FONT VARIABLES //////////
-/* $body-color: #333333;
+$body-color: #333333;
 
 .navbar .navbar-brand-wrapper{
   background-color: #35516a !important;
@@ -160,7 +160,20 @@ $body-color: #ffffff;
 
 .popover .popover-body{
   background-color: #ebebeb !important;
-} */
+}
+
+input{
+  background-color: white !important;
+  color:black !important;
+}
+input :focus{
+  background-color: white !important;
+  color:black !important;
+}
+ input :hover{
+  background-color: white !important;
+  color:black !important;
+}
 ////////// CONTENT WRAPPER //////////
 
 $content-padding: 1.875rem 1.75rem;
@@ -470,18 +483,19 @@ $bullet-line-list-shape-bg: color(white) !default;
 
 $buy-nowbanner-padding-top:62px;
 
-input {
+/* input {
 color:#ffeeee !important;
-}
+} */
 
-input:focus {
+/* input:focus {
   color: #ffeeee90 !important;
-}
+} */
 
 input:read-only{
   background-color: #7d8083 !important;
 }
 
 .css-1uccc91-singleValue{
-color:#ffeeee !important;
+color:black !important;
+background-color: white;
 }

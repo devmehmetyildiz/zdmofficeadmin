@@ -17,7 +17,7 @@ export class Delete extends Component {
   }
 
   DeleteHandle = async () => {
-    await this.props.DeleteFile(this.props.Files.selected_file)
+    await this.props.DeleteFile(this.props.Files.selected_record)
     await this.props.GetAllFiles()
     await this.props.CloseDeleteModal()
     await this.props.ClearSelectedFile()
@@ -25,13 +25,13 @@ export class Delete extends Component {
 
   componentDidUpdate() {
     if (
-      this.props.Files.selected_file.id !== 0 &&
+      this.props.Files.selected_record.id !== 0 &&
       !this.props.Files.isLoading &&
       !this.state.isDataFetched
     ) {
       this.setState({ isDataFetched: true }, () => {
         axios
-          .get(process.env.REACT_APP_BACKEND_URL + `/${ROUTES.FILE}/GetFile?ID=${this.props.Files.selected_file.concurrencyStamp}`, {
+          .get(process.env.REACT_APP_BACKEND_URL + `/${ROUTES.FILE}/GetFile?ID=${this.props.Files.selected_record.uuid}`, {
             headers: { Authorization: `Bearer ${GetToken()}` },
             responseType: "arraybuffer",
           })
@@ -66,7 +66,7 @@ export class Delete extends Component {
         <Modal.Body>
           <img style={{ objectFit:'contain', margin: '10px', width: '200px', height: '200px' }} src={this.state.file} className="card-img-top" />
           <p>
-            {this.props.Files.selected_file.name} dosyasını silmek istediğinize Eminmisiniz?
+            {this.props.Files.selected_record.name} dosyasını silmek istediğinize Eminmisiniz?
           </p>
         </Modal.Body>
         <Modal.Footer>

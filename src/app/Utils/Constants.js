@@ -5,6 +5,7 @@ export const ROUTES = {
     PRODUCTGROUPS: 'Productgroups',
     PRODUCTS: 'Products',
     FILE: 'File',
+    COMPANY : 'Company'
 }
 
 export const COLUMNTYPES = {

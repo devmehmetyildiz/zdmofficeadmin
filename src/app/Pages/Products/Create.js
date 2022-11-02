@@ -27,7 +27,9 @@ export class Create extends Component {
             updatetime: null,
             deletetime: null,
             isActive: true,
-            productgroup: {}
+            productgroup: {},
+            isFileChanged:false,
+            isDataChanged:false
         }
 
 
