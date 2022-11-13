@@ -81,7 +81,7 @@ export const CreateSubcategory = (Item, historypusher) => dispatch => {
 export const UpdateSubcategory = (Item, historypusher) => dispatch => {
     dispatch({ type: ACTION_TYPES.EDIT_SUBCATEGORY_INIT })
     axios({
-        method: `put`,
+        method: `post`,
         url: process.env.REACT_APP_BACKEND_URL + `/${ROUTES.SUBCATEGORIES}/Update`,
         headers: { Authorization: `Bearer ${GetToken()}` },
         data: Item
@@ -101,7 +101,7 @@ export const UpdateSubcategory = (Item, historypusher) => dispatch => {
 export const DeleteSubcategory = (Item) => dispatch => {
     dispatch({ type: ACTION_TYPES.DELETE_SUBCATEGORY_INIT })
     axios({
-        method: `delete`,
+        method: `post`,
         url: process.env.REACT_APP_BACKEND_URL + `/${ROUTES.SUBCATEGORIES}/Delete`,
         headers: { Authorization: `Bearer ${GetToken()}` },
         data: Item

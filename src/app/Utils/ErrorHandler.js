@@ -1,6 +1,7 @@
 import Popup from './Popup';
 
 function ErrorHandler(catcherr,itemname,jobtype) { 
+    console.log('catcherr: ', catcherr);
     if(catcherr===undefined){
         Popup("Error","Kullanıcı Kayıt Hatası","Server hatası") 
         return 0 
@@ -20,6 +21,10 @@ function ErrorHandler(catcherr,itemname,jobtype) {
         }
         if (catcherr.status === 403) {
             Popup("Error",itemname+' '+jobtype+' hatası','Yetkisiz İşlem')             
+            return 403
+        }
+        if (catcherr.status === 403) {
+            Popup("Error",itemname+' '+jobtype+' hatası','Method Hatası')             
             return 403
         }
         if (catcherr.status === 500) {

@@ -11,7 +11,7 @@ export class Register extends Component {
   constructor(props) {
     super(props)
     const currentitem = {
-      username: "",
+    username: "",
       password: "",
       email: ""
     }
@@ -20,7 +20,6 @@ export class Register extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    console.log("geldim")
     axios.post(process.env.REACT_APP_BACKEND_URL + '/Auth/Register', this.state.currentitem)
       .then(res => {
         console.log('res: ', res);

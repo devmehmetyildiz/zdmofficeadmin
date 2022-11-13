@@ -81,7 +81,7 @@ export const CreateCategory = (Item, historypusher) => dispatch => {
 export const UpdateCategory = (Item, historypusher) => dispatch => {
     dispatch({ type: ACTION_TYPES.EDIT_CATEGORY_INIT })
     axios({
-        method: `put`,
+        method: `post`,
         url: process.env.REACT_APP_BACKEND_URL + `/${ROUTES.CATEGORIES}/Update`,
         headers: { Authorization: `Bearer ${GetToken()}` },
         data: Item
@@ -101,7 +101,7 @@ export const UpdateCategory = (Item, historypusher) => dispatch => {
 export const DeleteCategory = (Item) => dispatch => {
     dispatch({ type: ACTION_TYPES.DELETE_CATEGORY_INIT })
     axios({
-        method: `delete`,
+        method: `post`,
         url: process.env.REACT_APP_BACKEND_URL + `/${ROUTES.CATEGORIES}/Delete`,
         headers: { Authorization: `Bearer ${GetToken()}` },
         data: Item

@@ -63,7 +63,7 @@ class AppRoutes extends Component {
           <ProtectedRoute exact path="/Productgroups/:Id" component={ ProductgroupsEdit } />
 
           <Route exact path="/Login" component={ Login } />       
-          <Route exact path="/User/Register" component={ Register } />
+          <Route exact path="/Register" component={ Register } />
           <Route exact path="/User/lockscreen" component={ Lockscreen } />
           <Route exact path="/error-pages/error-404" component={ Error404 } />
           <Route exact path="/error-pages/error-500" component={ Error500 } />

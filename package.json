@@ -1,7 +1,7 @@
 {
   "name": "patient_care",
   "version": "1.1.0",
-  "homepage": "https://api.armsteknoloji.com",
+  "homepage": "https://admin.zdmofis.com.tr",
   "private": true,
   "dependencies": {
     "@fullcalendar/daygrid": "^5.10.1",

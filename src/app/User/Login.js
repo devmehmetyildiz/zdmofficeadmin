@@ -78,16 +78,6 @@ export class Login extends Component {
                                                 <div className="mt-3 col-12 pr-5">
                                                     <button className="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn" onClick={this.handlesubmit}>Giriş Yap</button>
                                                 </div>
-                                                <div className="my-2 d-flex justify-content-between align-items-center">
-                                                    <div className="form-check">
-                                                        <label className="form-check-label text-muted">
-                                                            <input type="checkbox" className="form-check-input" />
-                                                            <i className="input-helper"></i>
-                                                            Beni Giriş Yapılı Tut
-                                                        </label>
-                                                    </div>
-                                                    <a href="!#" onClick={event => event.preventDefault()} className="auth-link text-muted">Şifreyi Unuttum?</a>
-                                                </div>
                                             </Form>
                                         </div>
                                     </div>

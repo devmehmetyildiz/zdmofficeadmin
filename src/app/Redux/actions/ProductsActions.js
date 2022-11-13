@@ -81,7 +81,7 @@ export const CreateProduct  = (Item, historypusher) => dispatch => {
 export const UpdateProduct  = (Item, historypusher) => dispatch => {
     dispatch({ type: ACTION_TYPES.EDIT_PRODUCT_INIT })
     axios({
-        method: `put`,
+        method: `post`,
         url: process.env.REACT_APP_BACKEND_URL + `/${ROUTES.PRODUCTS}/Update`,
         headers: { Authorization: `Bearer ${GetToken()}` },
         data: Item
@@ -101,7 +101,7 @@ export const UpdateProduct  = (Item, historypusher) => dispatch => {
 export const DeleteProduct  = (Item) => dispatch => {
     dispatch({ type: ACTION_TYPES.DELETE_PRODUCT_INIT })
     axios({
-        method: `delete`,
+        method: `post`,
         url: process.env.REACT_APP_BACKEND_URL + `/${ROUTES.PRODUCTS}/Delete`,
         headers: { Authorization: `Bearer ${GetToken()}` },
         data: Item

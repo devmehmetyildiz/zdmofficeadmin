@@ -93,11 +93,11 @@ $font-weight-bold: 700;
 $default-font-size: .875rem; // 14px as base font size
 
 $text-muted: #6c7293;
-//$body-color: #ffffff;
+$body-color: #ffffff;
 
 
 ////////// FONT VARIABLES //////////
-$body-color: #333333;
+/* $body-color: #333333;
 
 .navbar .navbar-brand-wrapper{
   background-color: #35516a !important;
@@ -173,7 +173,7 @@ input :focus{
  input :hover{
   background-color: white !important;
   color:black !important;
-}
+} */
 ////////// CONTENT WRAPPER //////////
 
 $content-padding: 1.875rem 1.75rem;

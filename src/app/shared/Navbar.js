@@ -12,7 +12,7 @@ class Navbar extends Component {
   }
 
   handleLogout = (e) => {
-    e.preventDefault() 
+    e.preventDefault()
     this.props.SetLogout(this.props.history)
   }
 
@@ -38,24 +38,9 @@ class Navbar extends Component {
                 <div className="navbar-profile">
                   <img className="img-xs rounded-circle" src={require('../../assets/images/faces/face15.jpg')} alt="profile" />
                   <p className="mb-0 d-none d-sm-block navbar-profile-name">{this.props.ActiveUser}</p>
-                  <i className="mdi mdi-menu-down d-none d-sm-block"></i>
                 </div>
               </Dropdown.Toggle>
-
               <Dropdown.Menu className="navbar-dropdown preview-list navbar-profile-dropdown-menu">
-                <h6 className="p-3 mb-0"><Trans>Profile</Trans></h6>
-                <Dropdown.Divider />
-                <Dropdown.Item href="!#" onClick={evt => evt.preventDefault()} className="preview-item">
-                  <div className="preview-thumbnail">
-                    <div className="preview-icon bg-dark rounded-circle">
-                      <i className="mdi mdi-settings text-success"></i>
-                    </div>
-                  </div>
-                  <div className="preview-item-content">
-                    <p className="preview-subject mb-1"><Trans>Settings</Trans></p>
-                  </div>
-                </Dropdown.Item>
-                <Dropdown.Divider />
                 <Dropdown.Item href="!#" onClick={this.handleLogout} className="preview-item">
                   <div className="preview-thumbnail">
                     <div className="preview-icon bg-dark rounded-circle">
@@ -63,11 +48,9 @@ class Navbar extends Component {
                     </div>
                   </div>
                   <div className="preview-item-content">
-                    <p className="preview-subject mb-1"><Trans>Log Out</Trans></p>
+                    <p className="preview-subject mb-1"><Trans>Çıkış Yap</Trans></p>
                   </div>
                 </Dropdown.Item>
-                <Dropdown.Divider />
-                <p className="p-3 mb-0 text-center"><Trans>Advanced settings</Trans></p>
               </Dropdown.Menu>
             </Dropdown>
           </ul>

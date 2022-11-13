@@ -89,8 +89,6 @@ export const CreateProductgroups = (Item, files, historypusher) => dispatch => {
         .then((res) => {
             var uploadedproducts = res.data
             files.forEach(file => {
-                console.log('uploadedproducts: ', uploadedproducts);
-                console.log('file: ', file);
                 file.productuui = uploadedproducts.find(item => item.productname === file.file.name.replace(/\.[^/.]+$/, "")).productuuid
 
                 const formData = new FormData();
@@ -113,7 +111,6 @@ export const CreateProductgroups = (Item, files, historypusher) => dispatch => {
                     data: formData
                 })
                     .then((res) => {
-                        console.log('res: ', res);
                         Popup("Success", "Dosyalar", `Dosya Yüklendi : ${file.name}`)
                     })
                     .catch(error => {
@@ -126,7 +123,6 @@ export const CreateProductgroups = (Item, files, historypusher) => dispatch => {
             historypusher.push("/Productgroups")
         })
         .catch(error => {
-            console.log('error: ', error);
             dispatch({ type: ACTION_TYPES.CREATE_PRODUCTGROUP_ERROR, payload: error })
             AxiosErrorHandle(error, ROUTES.PRODUCTGROUPS, "Add")
         })
@@ -135,7 +131,7 @@ export const CreateProductgroups = (Item, files, historypusher) => dispatch => {
 export const UpdateProductgroups = (Item,files, historypusher) => dispatch => {
     dispatch({ type: ACTION_TYPES.EDIT_PRODUCTGROUP_INIT })
     axios({
-        method: `put`,
+        method: `post`,
         url: process.env.REACT_APP_BACKEND_URL + `/${ROUTES.PRODUCTGROUPS}/Update`,
         headers: { Authorization: `Bearer ${GetToken()}` },
         data: Item
@@ -202,7 +198,7 @@ export const UpdateProductgroups = (Item,files, historypusher) => dispatch => {
 export const DeleteProductgroups = (Item) => dispatch => {
     dispatch({ type: ACTION_TYPES.DELETE_PRODUCTGROUP_INIT })
     axios({
-        method: `delete`,
+        method: `post`,
         url: process.env.REACT_APP_BACKEND_URL + `/${ROUTES.PRODUCTGROUPS}/Delete`,
         headers: { Authorization: `Bearer ${GetToken()}` },
         data: Item

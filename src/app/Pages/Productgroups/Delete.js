@@ -7,7 +7,7 @@ import { GetAllProductgroups, GetSelectedProductgroups, CloseDeleteModal, Delete
 export class Delete extends Component {
 
   DeleteHandle = async () => {
-    await this.props.DeleteProductgroups(this.props.Subcategories.selected_record)
+    await this.props.DeleteProductgroups(this.props.Productgroups.selected_record)
     await this.props.ClearSelectedProductgroups()
     await this.props.GetAllProductgroups()
     await this.props.CloseDeleteModal()
@@ -27,12 +27,12 @@ export class Delete extends Component {
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            Alt Kategori Silme
+            Ürün Grup Silme
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p>
-            {this.props.Subcategories.selected_record.name} ürün grubunu silmek istediğinize Eminmisiniz?
+            {this.props.Productgroups.selected_record.name} ürün grubunu silmek istediğinize Eminmisiniz?
           </p>
         </Modal.Body>
         <Modal.Footer>
@@ -45,7 +45,7 @@ export class Delete extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  Subcategories: state.Subcategories,
+  Productgroups: state.Productgroups,
 })
 
 const mapDispatchToProps = { GetAllProductgroups, GetSelectedProductgroups, CloseDeleteModal, DeleteProductgroups, ClearSelectedProductgroups }

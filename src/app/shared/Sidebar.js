@@ -50,9 +50,8 @@ class Sidebar extends Component {
   render() {
     return (
       <nav className="sidebar sidebar-offcanvas" id="sidebar">
-        <div className="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
-          <a className="sidebar-brand brand-logo" href="index.html"><img src={require('../../assets/images/logo.svg')} alt="logo" /></a>
-          <a className="sidebar-brand brand-logo-mini" href="index.html"><img src={require('../../assets/images/logo-mini.svg')} alt="logo" /></a>
+        <div className="sidebar-brand-wrapper d-none d-lg-flex align-items-center text-center justify-content-center fixed-top">
+         ZDM PANEL
         </div>
         <ul className="nav">
 
@@ -78,12 +77,6 @@ class Sidebar extends Component {
             <Link className="nav-link" to="/Companies">
               <span className="menu-icon"><i className="mdi mdi-speedometer"></i></span>
               <span className="menu-title"><Trans>Firmalar</Trans></span>
-            </Link>
-          </li>
-          <li className={this.isPathActive('/Files') ? 'nav-item menu-items active' : 'nav-item menu-items'}>
-            <Link className="nav-link" to="/Files">
-              <span className="menu-icon"><i className="mdi mdi-speedometer"></i></span>
-              <span className="menu-title"><Trans>Dosyalar</Trans></span>
             </Link>
           </li>
         </ul>

@@ -56,8 +56,8 @@ export class Edit extends Component {
       this.state.currentitem.id === 0) {
 
       const prevData = {
-        value: this.props.Subcategories.selected_record.category.uuid,
-        label: this.props.Subcategories.selected_record.category.name
+        value: this.props.Subcategories.selected_record.category ? this.props.Subcategories.selected_record.category.uuid : '',
+        label: this.props.Subcategories.selected_record.category ? this.props.Subcategories.selected_record.category.name : ''
       }
 
       const list = this.props.Categories.list.map((item, index) => {

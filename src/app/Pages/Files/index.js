@@ -33,7 +33,7 @@ export class Files extends Component {
         formatter: (cellContent, row) => {
           return <div className='containerclassheader'>
             <div className='d-inline'>
-              <img src={`${process.env.REACT_APP_BACKEND_URL}/${ROUTES.FILE}/GetImage?Guid=${row.concurrencyStamp}`} />
+              <img src={`${process.env.REACT_APP_BACKEND_URL}/${ROUTES.FILE}/GetImage?guid=${row.uuid}`} />
             </div>
             <div className='ml-2 d-inline text-nowrap'>
               {cellContent}
@@ -56,23 +56,8 @@ export class Files extends Component {
         text: 'Klasör Dizini',
         Columntype: COLUMNTYPES.TEXT,
         Formatheader: true,
-      }, {
-        dataField: 'downloadedcount',
-        text: 'İndirilme Sayısı',
-        Columntype: COLUMNTYPES.NUMBER,
-        Formatheader: true,
-      }, {
-        dataField: 'lastdownloadeduser',
-        text: 'En Son İndiren Kullanıcı',
-        Columntype: COLUMNTYPES.TEXT,
-        Formatheader: true,
       },
-      {
-        dataField: 'lastdownloadedip',
-        text: 'En Son İndiren IP',
-        Columntype: COLUMNTYPES.TEXT,
-        Formatheader: true,
-      }, {
+       {
         dataField: 'update',
         text: 'Güncelle',
         sort: true,
@@ -87,7 +72,7 @@ export class Files extends Component {
         },
         events: {
           onClick: (e, column, columnIndex, row, rowIndex) => {
-            this.props.history.push('/Files/' + row.concurrencyStamp)
+            this.props.history.push('/Files/' + row.uuid)
           }
         }
       }
@@ -120,14 +105,14 @@ export class Files extends Component {
 
 
   handleDeleteRole = async (e, row) => {
-    await this.props.GetSelectedFile(row.concurrencyStamp)
+    await this.props.GetSelectedFile(row.uuid)
     this.props.OpenDeleteModal()
   }
 
-  getimg = async (concurrencyStamp) => {
+  getimg = async (uuid) => {
     let data = ""
     await axios
-      .get(process.env.REACT_APP_BACKEND_URL + `/${ROUTES.FILE}/GetImage?Guid=${concurrencyStamp}`, {
+      .get(process.env.REACT_APP_BACKEND_URL + `/${ROUTES.FILE}/GetImage?guid=${uuid}`, {
         headers: { Authorization: `Bearer ${GetToken()}` },
         responseType: "arraybuffer",
       })

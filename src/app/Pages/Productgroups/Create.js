@@ -6,6 +6,7 @@ import "../../../assets/styles/Pages/Create.scss"
 import { CreateProductgroups } from "../../Redux/actions/ProductgroupsActions"
 import { GetAllCategories } from "../../Redux/actions/CategoriesActions"
 import { GetAllSubcategories } from "../../Redux/actions/SubcategoriesActions"
+import { GetAllCompanies } from "../../Redux/actions/CompanyActions"
 import Spinner from '../../shared/Spinner'
 import Select from 'react-select';
 import { Form } from 'react-bootstrap';
@@ -104,6 +105,7 @@ export class Create extends Component {
     componentDidMount() {
         this.props.GetAllCategories()
         this.props.GetAllSubcategories()
+        this.props.GetAllCompanies()
     }
 
     componentDidUpdate() {
@@ -356,6 +358,6 @@ const mapStateToProps = (state) => ({
     Companies: state.Companies
 })
 
-const mapDispatchToProps = { CreateProductgroups, GetAllCategories, GetAllSubcategories }
+const mapDispatchToProps = { CreateProductgroups, GetAllCategories, GetAllSubcategories,GetAllCompanies }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Create))

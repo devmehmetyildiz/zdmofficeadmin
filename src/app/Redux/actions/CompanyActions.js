@@ -81,7 +81,7 @@ export const CreateCompany = (Item, historypusher) => dispatch => {
 export const UpdateCompany = (Item, historypusher) => dispatch => {
     dispatch({ type: ACTION_TYPES.EDIT_COMPANY_INIT })
     axios({
-        method: `put`,
+        method: `post`,
         url: process.env.REACT_APP_BACKEND_URL + `/${ROUTES.COMPANY}/Update`,
         headers: { Authorization: `Bearer ${GetToken()}` },
         data: Item
@@ -101,7 +101,7 @@ export const UpdateCompany = (Item, historypusher) => dispatch => {
 export const DeleteCompany = (Item) => dispatch => {
     dispatch({ type: ACTION_TYPES.DELETE_COMPANY_INIT })
     axios({
-        method: `delete`,
+        method: `post`,
         url: process.env.REACT_APP_BACKEND_URL + `/${ROUTES.COMPANY}/Delete`,
         headers: { Authorization: `Bearer ${GetToken()}` },
         data: Item

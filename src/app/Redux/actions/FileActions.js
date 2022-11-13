@@ -98,7 +98,7 @@ export const UpdateFile = (Item, historypusher) => dispatch => {
 export const DeleteFile = (Item) => dispatch => {
     dispatch({ type: ACTION_TYPES.DELETE_FILE_INIT })
     axios({
-        method: `delete`,
+        method: `post`,
         url: process.env.REACT_APP_BACKEND_URL + `/${ROUTES.FILE}/Delete`,
         headers: { Authorization: `Bearer ${GetToken()}` },
         data: Item

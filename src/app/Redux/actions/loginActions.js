@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GetToken,AxiosErrorHandle } from "../../Utils/TokenValidChecker";
+import { GetToken, AxiosErrorHandle } from "../../Utils/TokenValidChecker";
 import Cookies from 'universal-cookie';
 import { ROUTES } from "../../Utils/Constants";
 import Popup from "../../Utils/Popup";
@@ -27,9 +27,8 @@ export const GetCurrentUser = () => dispatch => {
         headers: { Authorization: `Bearer ${GetToken()}` }
     })
         .then(response => dispatch({ type: ACTION_TYPES.GET_CURRENTUSER_SUCCESS, payload: response.data }))
-        .catch(error => { 
-            dispatch({ type: ACTION_TYPES.GET_CURRENTUSER_ERROR, payload: error }) 
-            AxiosErrorHandle(error,ROUTES.AUTH,"GetActiveuser")
+        .catch(error => {
+            dispatch({ type: ACTION_TYPES.GET_CURRENTUSER_ERROR, payload: error })
         })
 };
 
@@ -49,7 +48,6 @@ export const SetLogin = (logindata, historypusher) => dispatch => {
         })
         .catch(error => {
             dispatch({ type: ACTION_TYPES.LOGIN_ERROR, payload: error })
-            AxiosErrorHandle(error,ROUTES.AUTH,"Login")
         })
 }
 
@@ -60,7 +58,7 @@ export const SetLogout = (historypusher) => dispatch => {
         cookies.remove('X-Access-Token')
         cookies.remove('X-Username')
         dispatch({ type: ACTION_TYPES.LOGOUT_SUCCESS })
-        Popup("Success","Patient Care","Çıkış Yapıldı")
+        Popup("Success", "ZDMofis", "Çıkış Yapıldı")
         historypusher.push("/Login")
     } catch (error) {
         dispatch({ type: ACTION_TYPES.LOGOUT_ERROR })
