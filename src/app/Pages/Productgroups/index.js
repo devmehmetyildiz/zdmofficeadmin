@@ -51,11 +51,6 @@ export class Productgroups extends Component {
         text: 'Kategori',
         Columntype: COLUMNTYPES.TEXT,
         Formatheader: true,
-      }, {
-        dataField: 'subcategory.name',
-        text: 'Alt kategori',
-        Columntype: COLUMNTYPES.TEXT,
-        Formatheader: true,
       },
       {
         dataField: 'company.name',
@@ -113,6 +108,7 @@ export class Productgroups extends Component {
                 <th>Ürün Adı</th>
                 <th>Ürün Kodu</th>
                 <th>Ürün Ebatları</th>
+                <th>Ürün Kategorisi</th>
                 <th>Ürün Ürün Fiyatı</th>
               </tr>
             </thead>
@@ -123,6 +119,7 @@ export class Productgroups extends Component {
                   <th>{item.name}</th>
                   <th>  {item.productcode}</th>
                   <th>  {item.dimension}</th>
+                  <th>  {item.subcategory ? item.subcategory.name :''}</th>
                   <th> {item.price} <span>TL</span></th>
                 </tr>)}
             </tbody>

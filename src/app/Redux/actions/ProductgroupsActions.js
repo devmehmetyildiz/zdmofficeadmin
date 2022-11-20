@@ -111,7 +111,7 @@ export const CreateProductgroups = (Item, files, historypusher) => dispatch => {
                     data: formData
                 })
                     .then((res) => {
-                        Popup("Success", "Dosyalar", `Dosya Yüklendi : ${file.name}`)
+                        Popup("Success", "Dosyalar", `Dosya Yüklendi : ${file.file ? file.file.name : null }`)
                     })
                     .catch(error => {
                         AxiosErrorHandle(error, ROUTES.FILE, "Add")
@@ -128,7 +128,7 @@ export const CreateProductgroups = (Item, files, historypusher) => dispatch => {
         })
 }
 
-export const UpdateProductgroups = (Item,files, historypusher) => dispatch => {
+export const UpdateProductgroups = (Item, files, historypusher) => dispatch => {
     dispatch({ type: ACTION_TYPES.EDIT_PRODUCTGROUP_INIT })
     axios({
         method: `post`,
@@ -137,56 +137,55 @@ export const UpdateProductgroups = (Item,files, historypusher) => dispatch => {
         data: Item
     })
         .then((res) => {
-            console.log('res: ', res);
             var uploadedproducts = res.data
-           if(Array.isArray(uploadedproducts)&& uploadedproducts.length>0){
-            files.forEach(file => {
-                file.productuui = uploadedproducts.find(item => item.productname === file.file.name.replace(/\.[^/.]+$/, "")).productuuid
-
-                const formData = new FormData();
-                formData.append('id', file.id);
-                formData.append('productuui', file.productuui);
-                formData.append('name', file.name);
-                formData.append('filefolder', file.filefolder);
-                formData.append('filetype', file.filetype);
-                formData.append('file', file.file);
-                formData.append('uuid', file.uuid);
-                formData.append('createdUser', file.createdUser);
-                formData.append('updatedUser', file.updatedUser);
-                formData.append('deleteUser', file.deleteUser);
-                formData.append('isActive', file.isActive);
-                console.log('uploadedproducts.find(item => item.productname === file.file.name.replace(/\.[^/.]+$/, "")).isFileUpdate: ', uploadedproducts.find(item => item.productname === file.file.name.replace(/\.[^/.]+$/, "")).isFileUpdate);
-                if (uploadedproducts.find(item => item.productname === file.file.name.replace(/\.[^/.]+$/, "")).isFileUpdate) {
-                    axios({
-                        method: `post`,
-                        url: process.env.REACT_APP_BACKEND_URL + `/${ROUTES.FILE}/Update`,
-                        headers: { Authorization: `Bearer ${GetToken()}` },
-                        data: formData
-                    })
-                        .then(() => {
-                            Popup("Success", "Dosyalar", `Dosya Güncellendi: ${file.name}`)
-                        })
-                        .catch(error => {
-                            AxiosErrorHandle(error, ROUTES.FILE, "Update")
-                        })
-                } else {
-                    axios({
-                        method: `post`,
-                        url: process.env.REACT_APP_BACKEND_URL + `/${ROUTES.FILE}/Add`,
-                        headers: { Authorization: `Bearer ${GetToken()}` },
-                        data: formData
-                    })
-                        .then((res) => {
-                            Popup("Success", "Dosyalar", `Dosya Yüklendi : ${file.name}`)
-                        })
-                        .catch(error => {
-                            AxiosErrorHandle(error, ROUTES.FILE, "Add")
-                        })
-                }
-            });
-           }
+            if (Array.isArray(uploadedproducts) && uploadedproducts.length > 0) {
+                files.forEach(file => {
+                    if (file.file) {
+                        file.productuui = uploadedproducts.find(item => item.productname === file.file.name.replace(/\.[^/.]+$/, "")).productuuid
+                        const formData = new FormData();
+                        formData.append('id', file.id);
+                        formData.append('productuui', file.productuui);
+                        formData.append('name', file.name);
+                        formData.append('filefolder', file.filefolder);
+                        formData.append('filetype', file.filetype);
+                        formData.append('file', file.file);
+                        formData.append('uuid', file.uuid);
+                        formData.append('createdUser', file.createdUser);
+                        formData.append('updatedUser', file.updatedUser);
+                        formData.append('deleteUser', file.deleteUser);
+                        formData.append('isActive', file.isActive);
+                        if (uploadedproducts.find(item => item.productname === file.file.name.replace(/\.[^/.]+$/, "")).isFileUpdate) {
+                            axios({
+                                method: `post`,
+                                url: process.env.REACT_APP_BACKEND_URL + `/${ROUTES.FILE}/Update`,
+                                headers: { Authorization: `Bearer ${GetToken()}` },
+                                data: formData
+                            })
+                                .then(() => {
+                                    Popup("Success", "Dosyalar", `Dosya Güncellendi: ${file.file ? file.file.name : null}`)
+                                })
+                                .catch(error => {
+                                    AxiosErrorHandle(error, ROUTES.FILE, "Update")
+                                })
+                        } else {
+                            axios({
+                                method: `post`,
+                                url: process.env.REACT_APP_BACKEND_URL + `/${ROUTES.FILE}/Add`,
+                                headers: { Authorization: `Bearer ${GetToken()}` },
+                                data: formData
+                            })
+                                .then((res) => {
+                                    Popup("Success", "Dosyalar", `Dosya Yüklendi : ${file.file ? file.file.name : null}`)
+                                })
+                                .catch(error => {
+                                    AxiosErrorHandle(error, ROUTES.FILE, "Add")
+                                })
+                        }
+                    }
+                });
+            }
             dispatch({ type: ACTION_TYPES.CREATE_PRODUCTGROUP_SUCCESS })
-            Popup("Success", "Ürün Grupları", "Ürün Grupları Oluşturuldu")
+            Popup("Success", "Ürün Grupları", "Ürün Grupları Güncellendi")
             historypusher.push("/Productgroups")
         })
         .catch(error => {

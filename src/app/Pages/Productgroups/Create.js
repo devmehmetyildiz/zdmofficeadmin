@@ -30,9 +30,7 @@ export class Create extends Component {
             isActive: true,
             products: [],
             categoryuuid: "",
-            subcategoryuuid: "",
             category: {},
-            subcategory: {},
             companyuuid: "",
             company: {}
         }
@@ -58,8 +56,10 @@ export class Create extends Component {
         const newdata = { ...this.state.currentitem }
         newdata.isSet = this.state.selectedsetstatus.value
         newdata.categoryuuid = this.state.selectedcategory.value
-        newdata.subcategoryuuid = this.state.selectedsubcategory.value
         newdata.companyuuid = this.state.selectedcompany.value
+        newdata.products.forEach(element => {
+            element.subcategoryuuid = element.subcategoryuuid.value
+        });
         this.setState({ currentitem: newdata }, () => {
             const prevfiles = []
             const newdata = { ...this.state.currentitem }
@@ -187,6 +187,12 @@ export class Create extends Component {
         this.setState({ currentitem: newdata })
     }
 
+    handlecategorychange = (e, index) => {
+        const newdata = { ...this.state.currentitem }
+        newdata.products[index].subcategoryuuid = e
+        this.setState({ currentitem: newdata })
+    }
+
     showPreview = (e, index) => {
         if (e.target.files && e.target.files[0]) {
             let imageFile = e.target.files[0]
@@ -265,20 +271,6 @@ export class Create extends Component {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className='col'>
-                                                <div className='row'>
-                                                    <label style={{ fontSize: "12px" }} className="col-form-label">Alt Kategori</label>
-                                                </div>
-                                                <div className='row'>
-                                                    <div style={{ marginRight: '-5px' }} className='col-12 pr-5 mb-3'>
-                                                        <Select
-                                                            value={this.state.selectedsubcategory}
-                                                            onChange={this.handleselectsubcategories}
-                                                            options={this.state.subcategories}
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </div>
                                         </div>
                                         <div className='row'>
                                             <div className='col'>
@@ -324,6 +316,14 @@ export class Create extends Component {
                                                                     <Form.Control className='' id="dimension" placeholder='Ebat' type='text' value={product.dimension} onChange={(e) => { this.handleproductchange(e, index) }} />
                                                                 </div>
                                                                 <div className='col m-2'>
+                                                                    {index > 0 ? null : <label>Ürün Kategorisi</label>}
+                                                                    <Select
+                                                                        value={product.subcategoryuuid}
+                                                                        onChange={(e) => { this.handlecategorychange(e, index) }}
+                                                                        options={this.state.subcategories}
+                                                                    />
+                                                                </div>
+                                                                <div style={{ width: '50%' }} className='col m-2 '>
                                                                     {index > 0 ? null : <label>Ürün Fiyatı</label>}
                                                                     <Form.Control className='' id="price" placeholder='Fiyat' type='text' value={product.price} onChange={(e) => { this.handleproductchange(e, index) }} />
                                                                 </div>
@@ -358,6 +358,6 @@ const mapStateToProps = (state) => ({
     Companies: state.Companies
 })
 
-const mapDispatchToProps = { CreateProductgroups, GetAllCategories, GetAllSubcategories,GetAllCompanies }
+const mapDispatchToProps = { CreateProductgroups, GetAllCategories, GetAllSubcategories, GetAllCompanies }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Create))

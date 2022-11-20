@@ -57,18 +57,23 @@ export class Edit extends Component {
     const newdata = { ...this.state.currentitem }
     newdata.isSet = this.state.selectedsetstatus ? this.state.selectedsetstatus.value : false
     newdata.categoryuuid = this.state.selectedcategory ? this.state.selectedcategory.value : ''
-    newdata.subcategoryuuid = this.state.selectedsubcategory ? this.state.selectedsubcategory.value : ''
     newdata.companyuuid = this.state.selectedcompany ? this.state.selectedcompany.value : ''
+    newdata.products.forEach(element => {
+      element.subcategoryuuid = element.subcategoryuuid ? element.subcategoryuuid.value : ''
+    });
     this.setState({ currentitem: newdata }, () => {
       const prevfiles = []
       const newdata = { ...this.state.currentitem }
       newdata.products.forEach((element, index) => {
         prevfiles.push(element.file)
       });
+      console.log('prevfiles: ', prevfiles);
       this.setState({ files: prevfiles }, () => {
+        console.log('files: ', this.state.files);
         newdata.products.forEach((element, index) => {
           delete element.file
         });
+        console.log('newdata: ', newdata);
         this.props.UpdateProductgroups(this.state.currentitem, this.state.files, this.props.history)
 
       })
@@ -124,12 +129,6 @@ export class Edit extends Component {
       !this.props.Companies.isLoading &&
       !this.state.isDataFetched
     ) {
-      let prevselectedsetstatus = {}
-      const newdata = { ...this.props.Productgroups.selected_record }
-      newdata.isSet ? prevselectedsetstatus = { value: true, label: 'Set Ürün' } : prevselectedsetstatus = { value: false, label: 'Set Ürün Değil' }
-      newdata.products.forEach(element => {
-        element.file = this.props.Productgroups.files.find(u => u.productuui === element.uuid)
-      });
       const categorylist = this.props.Categories.list.map(item => {
         return { value: item.uuid, label: item.name }
       })
@@ -139,6 +138,13 @@ export class Edit extends Component {
       const companylist = this.props.Companies.list.map(item => {
         return { value: item.uuid, label: item.name }
       })
+      let prevselectedsetstatus = {}
+      const newdata = { ...this.props.Productgroups.selected_record }
+      newdata.isSet ? prevselectedsetstatus = { value: true, label: 'Set Ürün' } : prevselectedsetstatus = { value: false, label: 'Set Ürün Değil' }
+      newdata.products.forEach(element => {
+        element.file = this.props.Productgroups.files.find(u => u.productuui === element.uuid)
+        element.subcategoryuuid = subcategorylist.find(u => u.value === element.subcategoryuuid)
+      });
       const prevselectedcategory = this.props.Productgroups.selected_record.category ? {
         value: this.props.Productgroups.selected_record.category.uuid,
         label: this.props.Productgroups.selected_record.category.name
@@ -147,11 +153,7 @@ export class Edit extends Component {
         value: this.props.Productgroups.selected_record.company.uuid,
         label: this.props.Productgroups.selected_record.company.name
       } : null
-      const prevselectedsubcategory = this.props.Productgroups.selected_record.subcategory ? {
-        value: this.props.Productgroups.selected_record.subcategory.uuid,
-        label: this.props.Productgroups.selected_record.subcategory.name
-      } : null
-      this.setState({ selectedsetstatus: prevselectedsetstatus, selectedcompany: prevselectedcompany, companies: companylist, categories: categorylist, subcategories: subcategorylist, isDataFetched: true, currentitem: newdata, selectedcategory: prevselectedcategory, selectedsubcategory: prevselectedsubcategory })
+      this.setState({ selectedsetstatus: prevselectedsetstatus, selectedcompany: prevselectedcompany, companies: companylist, categories: categorylist, subcategories: subcategorylist, isDataFetched: true, currentitem: newdata, selectedcategory: prevselectedcategory })
     }
   }
 
@@ -200,8 +202,6 @@ export class Edit extends Component {
   DeleteProduct = (e, index) => {
     e.preventDefault()
     const newdata = { ...this.state.currentitem }
-    console.log('newdata.products[index]: ', newdata.products[index]);
-    console.log('newdata.products[index].uuid : ', newdata.products[index].uuid);
     if (newdata.products[index].uuid || newdata.products[index].uuid !== '') {
       newdata.products[index].isActive = false
       newdata.products[index].isDataChanged = true
@@ -231,7 +231,10 @@ export class Edit extends Component {
         newdata.products[index].name = newdata.products[index].file.file.name.replace(/\.[^/.]+$/, "")
         newdata.products[index].isFileChanged = true
         newdata.products[index].isDataChanged = true
-        this.setState({ currentitem: newdata })
+        this.setState({ currentitem: newdata }, () => {
+          console.log('currentitem: ', this.state.currentitem);
+  
+        })
       }
       reader.readAsDataURL(imageFile)
     } else {
@@ -239,9 +242,20 @@ export class Edit extends Component {
       newdata.products[index].file.file = null
       newdata.products[index].file.filepath = this.state.defaultImageSrc
       newdata.products[index].name = ""
-      this.setState({ currentitem: newdata })
+      this.setState({ currentitem: newdata }, () => {
+        console.log('currentitem: ', this.state.currentitem);
+
+      })
     }
   }
+
+  handlecategorychange = (e, index) => {
+    const newdata = { ...this.state.currentitem }
+    newdata.products[index].subcategoryuuid = e
+    newdata.products[index].isDataChanged = true
+    this.setState({ currentitem: newdata })
+  }
+
 
   render() {
     const isLoading = (this.props.Productgroups.isLoading)
@@ -249,7 +263,6 @@ export class Edit extends Component {
       { value: false, label: 'Set Ürün Değil' },
       { value: true, label: 'Set Ürün' }
     ]
-    console.log('his.state.currentitem: ', this.state.currentitem);
     return (
       <>
         {isLoading ? <Spinner /> :
@@ -302,7 +315,7 @@ export class Edit extends Component {
                           </div>
                         </div>
                       </div>
-                      <div className='col'>
+                      {/*    <div className='col'>
                         <div className='row'>
                           <label style={{ fontSize: "12px" }} className="col-form-label">Alt Kategori</label>
                         </div>
@@ -315,7 +328,7 @@ export class Edit extends Component {
                             />
                           </div>
                         </div>
-                      </div>
+                      </div> */}
                     </div>
                     <div className='row'>
                       <div className='col'>
@@ -365,6 +378,14 @@ export class Edit extends Component {
                                   <Form.Control className='' id="dimension" placeholder='Ebat' type='text' value={product.dimension} onChange={(e) => { this.handleproductchange(e, index) }} />
                                 </div>
                                 <div className='col m-2'>
+                                  {index > 0 ? null : <label>Ürün Kategorisi</label>}
+                                  <Select
+                                    value={product.subcategoryuuid}
+                                    onChange={(e) => { this.handlecategorychange(e, index) }}
+                                    options={this.state.subcategories}
+                                  />
+                                </div>
+                                <div style={{ width: '50%' }} className='col m-2 '>
                                   {index > 0 ? null : <label>Ürün Fiyatı</label>}
                                   <Form.Control className='' id="price" placeholder='Fiyat' type='text' value={product.price} onChange={(e) => { this.handleproductchange(e, index) }} />
                                 </div>
